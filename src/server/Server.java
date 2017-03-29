@@ -4,6 +4,8 @@ import server.concurrency.Worker;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Natnael on 3/29/2017.
@@ -11,8 +13,12 @@ import java.net.ServerSocket;
  */
 public class Server {
 
+    /* Active clients */
+    /* This list is only accessible by synchronized functions */
+    private List<User> activeClients = new LinkedList<>();
+
     private ServerSocket server = null;
-    private Thread[] workers = null; // thread pool
+    private Thread[] workers = null;  // thread pool
     private int howManyThreads;
 
     public Server (int port, int howManyThreads) {
@@ -52,7 +58,7 @@ public class Server {
     private void createThreadpool(int howmany) {
         workers = new Thread[howmany];
         for (int i = 0; i < howmany; i++) {
-            workers[i] = new Worker(String.format("Thread #" + i), server);
+            workers[i] = new Worker("Thread #" + i, server);
             workers[i].start();
         }
 

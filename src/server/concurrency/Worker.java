@@ -1,5 +1,6 @@
 package server.concurrency;
 
+import server.enums.Function;
 import server.enums.ServerStatus;
 
 import java.io.BufferedReader;
@@ -8,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 
 /**
  * Servers worker thread.
@@ -19,9 +21,7 @@ import java.net.Socket;
  */
 public class Worker extends Thread {
 
-    private ServerSocket server = null;
-    private BufferedReader in = null;
-    private PrintWriter out = null;
+    private ServerSocket server;
 
     public Worker (String name, ServerSocket server) {
         super(name);
@@ -33,7 +33,9 @@ public class Worker extends Thread {
         System.out.println(getName() + " Started");
         while(true) {
 
-            Socket client = null;
+            Socket client;
+            BufferedReader in;
+            PrintWriter out;
 
             try {
                 client = server.accept();
@@ -51,31 +53,52 @@ public class Worker extends Thread {
             // communication loop
             while (true) {
                 try {
-                    if (client == null) {
-                        break;
-                    }
-
                     String line = in.readLine();
-                    System.out.println(line);
-
-                    if (line.contains("disconnect")) {
-                        out.println("Bye");
+                    if (validate(line)) {
+                        out.println("<Invalid command>");
+                        out.flush();
                         client.close();
                         break;
                     }
-                    out.println("hello there");
-                    out.flush();
+
+                    String[] command = parse(line);
+                    System.out.println(Arrays.toString(command));
+
+                    switch(command[0]) {
+
+                        case Function.REGISTER:
+                            break;
+
+                        case Function.LOGIN:
+                            break;
+
+                        case Function.MSG:
+                            break;
+
+                        case Function.CLIST:
+                            break;
+
+                        case Function.DISCONNECT:
+                            break;
+
+                        default:
+                            break;
+
+                    }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println("client ended connection");
+                    break;
                 }
             }
 
-//            try {
-//                Thread.sleep(6000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
+            // Don't stress the CPU
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
+            // Server is preparing to terminate
             if (this.isInterrupted()) {
                 break;
             }
@@ -83,29 +106,73 @@ public class Worker extends Thread {
         System.out.println(getName() + " Stopped");
     }
 
-    public String parse() {
-//        try {
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        return null;
+    /**
+     * validate incoming command
+     * returns true if validation failed.
+     *
+     * @param command -
+     * @return -
+     */
+    private boolean validate(String command) {
+        if (command == null) {
+            return false;
+        }
+        if (command.isEmpty()) {
+            return false;
+        }
+
+        char[] val = command.toCharArray();
+
+        if (val[0] != '<' || val[val.length-1] != '>') {
+            return false;
+        }
+
+        System.out.println("Validation failed");
+        return true;
     }
 
-    public synchronized ServerStatus registerClient(String clientID, String password) {
+    /**
+     * validation has to happen before this method is called
+     *
+     * @param command - raw message
+     * @return - expected [FUNC,PAYLOAD]
+     */
+    private String[] parse(String command) {
+
+        String clean = command.replace("<", "");
+        clean = clean.replace(">", "");
+        String cmd[] = clean.split(",");
+
+        /* Expected result [function, string] */
+        String result[] = new String[2];
+        result[0] = cmd[0].trim().toUpperCase();
+
+        String payload = "";
+        for (int i = 1; i < cmd.length; i++) {
+            payload = payload.concat(cmd[i].trim());
+            if (i < cmd.length-1) {
+                payload = payload.concat(",");
+            }
+        }
+        result[1] = payload;
+
+        return result;
+    }
+
+    private synchronized ServerStatus registerClient(String clientID, String password) {
         return ServerStatus.SUCCESS;
     }
 
-    public synchronized ServerStatus loginClient(String clientID, String password) {
+    private synchronized ServerStatus loginClient(String clientID, String password) {
         return ServerStatus.SUCCESS;
     }
 
-    public synchronized ServerStatus disconnectClient(String clientID) {
+    private synchronized ServerStatus disconnectClient(String clientID) {
         // disconnect a client aka remove from active list
         return ServerStatus.SUCCESS;
     }
 
-    public synchronized ServerStatus message(String message) {
+    private synchronized ServerStatus message(String message) {
         // broad cast message to all online clients
         return ServerStatus.SUCCESS;
     }

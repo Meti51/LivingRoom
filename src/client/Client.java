@@ -13,14 +13,13 @@ import java.util.Scanner;
  */
 public class Client {
 
-    Socket client = null;
-    PrintWriter outStream = null;
-    BufferedReader inStream = null;
+    private PrintWriter outStream = null;
+    private BufferedReader inStream = null;
 
     public Client(String ip, int port) {
         try {
             // connect to server
-            client = new Socket(ip, port);
+            Socket client = new Socket(ip, port);
 
             // write outStream the connection
             outStream = new PrintWriter(client.getOutputStream(),
@@ -38,15 +37,14 @@ public class Client {
         Scanner keyboard = new Scanner(System.in);
 
         while (true) {
-            System.out.print("Me > ");
+            System.out.print("Me > \t");
             String message = keyboard.nextLine();
 
             String out = constructMessage(message);
 
             if (this.outStream != null) {
                 outStream.println(out);
-                outStream.flush();
-            }
+                outStream.flush();            }
 
             if (this.inStream != null) {
                 try {
