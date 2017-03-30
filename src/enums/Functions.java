@@ -1,10 +1,10 @@
-package server.enums;
+package enums;
 
 /**
  * Created by Natnael on 3/29/2017.
  *
  */
-public class Function {
+public class Functions {
     public static final String REGISTER = "REGISTER";
     public static final String LOGIN = "LOGIN";
     public static final String MSG = "MSG";

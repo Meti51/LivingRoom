@@ -11,15 +11,16 @@ import java.util.Scanner;
  * Created by Natnael on 3/29/2017.
  *
  */
-public class Client {
+public class ClientSide {
 
     private PrintWriter outStream = null;
     private BufferedReader inStream = null;
+    private Socket client = null;
 
-    public Client(String ip, int port) {
+    public ClientSide(String ip, int port) {
         try {
             // connect to server
-            Socket client = new Socket(ip, port);
+            client = new Socket(ip, port);
 
             // write outStream the connection
             outStream = new PrintWriter(client.getOutputStream(),
@@ -36,33 +37,33 @@ public class Client {
     public void init() {
         Scanner keyboard = new Scanner(System.in);
 
-        while (true) {
-            System.out.print("Me > \t");
+        while (!client.isClosed()) {
+            System.out.print("Me > ");
             String message = keyboard.nextLine();
 
-            String out = constructMessage(message);
+//            String out = constructMessage(message);
 
             if (this.outStream != null) {
-                outStream.println(out);
-                outStream.flush();            }
+                outStream.println(message.replace("Me >", ""));
+            }
 
-            if (this.inStream != null) {
-                try {
-                    String msg = inStream.readLine();
-                    System.out.println(msg);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                String msg = inStream.readLine();
+                System.out.println(msg);
+            } catch (IOException e) {
+//                System.out.println("Not ready");
+            }
+
+            if (message.contains("disconnect")) {
+                System.out.println("Ending chatroom");
+                break;
             }
         }
     }
 
     private String constructMessage(String msg) {
-        String out = String.format("<" + msg + ">");
+        String out = String.format("<MSG, " + msg + ">");
 
         return out;
     }
-
-
-
 }

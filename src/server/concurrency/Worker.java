@@ -1,104 +1,94 @@
 package server.concurrency;
 
-import server.enums.Function;
-import server.enums.ServerStatus;
+import client.ClientSide;
+import enums.Functions;
+import enums.ServerStatus;
+import server.client.Client;
+import server.command.Command;
+import server.request.Request;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
+import java.io.*;
 import java.net.Socket;
-import java.util.Arrays;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * Servers worker thread.
- * Each thread accept client request and
- * service with the appropriate response.
+ * Each thread services pending request from buffer.
  *
  * Created by on 3/29/2017
  * @author Natnael Seifu
  */
 public class Worker extends Thread {
 
-    private ServerSocket server;
+    private Queue serviceBuffer;
+    private List<Client> activeList;
+    private List<Client> registered;
+    private Object lock;
 
-    public Worker (String name, ServerSocket server) {
+    public Worker (String name, Queue buffer, List<Client> activeList, List<Client> registered) {
         super(name);
-        this.server = server;
+        this.serviceBuffer = buffer;
+        this.activeList = activeList;
+        this.registered = registered;
     }
 
     @Override
     public void run() {
         System.out.println(getName() + " Started");
+        Request request;
+
         while(true) {
-
-            Socket client;
-            BufferedReader in;
-            PrintWriter out;
-
             try {
-                client = server.accept();
-                System.out.println("Thread " + getName() + " connected to " + client.toString());
-                in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                out = new PrintWriter(client.getOutputStream(), true);
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-                System.out.println("Server may be down");
-                System.out.println("Please try again");
-                System.out.println("Shutting down");
-                break;
-            }
+                if ((request = (Request) serviceBuffer.poll()) != null) {
+                    System.out.println(getName() + " Servicing ...");
+                    Command cmd = request.getCmd();
+                    Socket client = request.getConnection();
 
-            // communication loop
-            while (true) {
-                try {
-                    String line = in.readLine();
-                    if (validate(line)) {
-                        out.println("<Invalid command>");
-                        out.flush();
-                        client.close();
-                        break;
-                    }
+                    PrintWriter out = new PrintWriter(client.getOutputStream(), true);
+                    String[] input;
 
-                    String[] command = parse(line);
-                    System.out.println(Arrays.toString(command));
+                    switch (cmd.getFunction()) {
 
-                    switch(command[0]) {
-
-                        case Function.REGISTER:
+                        case Functions.REGISTER:
+                            input = cmd.getPayload().split(",");
+                            register(out, input[0], input[1]);
                             break;
 
-                        case Function.LOGIN:
+                        case Functions.LOGIN:
+                            input = cmd.getPayload().split(",");
+                            login(input[0], input[1]);
                             break;
 
-                        case Function.MSG:
+                        case Functions.MSG:
+                            message(cmd.getPayload());
                             break;
 
-                        case Function.CLIST:
+                        case Functions.CLIST:
+                            clist(client);
                             break;
 
-                        case Function.DISCONNECT:
+                        case Functions.DISCONNECT:
+                            out.println("Closing connection. Bye");
+                            client.close();
                             break;
 
                         default:
                             break;
 
                     }
-                } catch (IOException e) {
-                    System.out.println("client ended connection");
-                    break;
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             // Don't stress the CPU
             try {
-                Thread.sleep(1000);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-            // Server is preparing to terminate
+            // ServerSide is preparing to terminate
             if (this.isInterrupted()) {
                 break;
             }
@@ -107,73 +97,58 @@ public class Worker extends Thread {
     }
 
     /**
-     * validate incoming command
-     * returns true if validation failed.
      *
-     * @param command -
+     *
+     * @param out -
+     * @param clientID -
+     * @param password -
      * @return -
      */
-    private boolean validate(String command) {
-        if (command == null) {
-            return false;
-        }
-        if (command.isEmpty()) {
-            return false;
-        }
+    private synchronized ServerStatus register(PrintWriter out, String clientID, String password) {
 
-        char[] val = command.toCharArray();
-
-        if (val[0] != '<' || val[val.length-1] != '>') {
-            return false;
-        }
-
-        System.out.println("Validation failed");
-        return true;
+        return ServerStatus.SUCCESS;
     }
 
     /**
-     * validation has to happen before this method is called
      *
-     * @param command - raw message
-     * @return - expected [FUNC,PAYLOAD]
+     *
+     * @param clientID -
+     * @param password -
+     * @return -
      */
-    private String[] parse(String command) {
-
-        String clean = command.replace("<", "");
-        clean = clean.replace(">", "");
-        String cmd[] = clean.split(",");
-
-        /* Expected result [function, string] */
-        String result[] = new String[2];
-        result[0] = cmd[0].trim().toUpperCase();
-
-        String payload = "";
-        for (int i = 1; i < cmd.length; i++) {
-            payload = payload.concat(cmd[i].trim());
-            if (i < cmd.length-1) {
-                payload = payload.concat(",");
-            }
-        }
-        result[1] = payload;
-
-        return result;
-    }
-
-    private synchronized ServerStatus registerClient(String clientID, String password) {
+    private synchronized ServerStatus login(String clientID, String password) {
         return ServerStatus.SUCCESS;
     }
 
-    private synchronized ServerStatus loginClient(String clientID, String password) {
-        return ServerStatus.SUCCESS;
-    }
-
-    private synchronized ServerStatus disconnectClient(String clientID) {
-        // disconnect a client aka remove from active list
-        return ServerStatus.SUCCESS;
-    }
-
+    /**
+     *
+     *
+     * @param message -
+     * @return -
+     */
     private synchronized ServerStatus message(String message) {
         // broad cast message to all online clients
+        return ServerStatus.SUCCESS;
+    }
+
+    /**
+     *
+     *
+     * @param client -
+     * @return -
+     */
+    private synchronized ServerStatus clist(Socket client) {
+        // broad cast message to all online clients
+        return ServerStatus.SUCCESS;
+    }
+
+    /**
+     *
+     * @param clientID -
+     * @return -
+     */
+    private synchronized ServerStatus disconnect(String clientID) {
+        // disconnect a client aka remove from active list
         return ServerStatus.SUCCESS;
     }
 }
