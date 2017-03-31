@@ -48,8 +48,10 @@ public class ClientSide {
             }
 
             try {
-                String msg = inStream.readLine();
-                System.out.println(msg);
+                if (inStream.ready()) {
+                    String msg = inStream.readLine();
+                    System.out.println(msg);
+                }
             } catch (IOException e) {
 //                System.out.println("Not ready");
             }

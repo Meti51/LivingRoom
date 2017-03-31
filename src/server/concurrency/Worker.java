@@ -105,7 +105,8 @@ public class Worker extends Thread {
      * @return -
      */
     private synchronized ServerStatus register(PrintWriter out, String clientID, String password) {
-
+        out.println(clientID + ", " + password);
+        out.flush();
         return ServerStatus.SUCCESS;
     }
 
