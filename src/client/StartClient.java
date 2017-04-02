@@ -10,5 +10,4 @@ public class StartClient {
         ClientSide client = new ClientSide("127.0.0.1", 4444);
         client.init();
     }
-
 }

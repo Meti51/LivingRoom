@@ -1,11 +1,18 @@
 package client;
 
+import client.concurrency.Reader;
+import client.concurrency.Writer;
+import client.work.ClientWork;
+import enums.ErrorMessages;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Queue;
 import java.util.Scanner;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by Natnael on 3/29/2017.
@@ -17,10 +24,14 @@ public class ClientSide {
     private BufferedReader inStream = null;
     private Socket client = null;
 
+    private Thread reader;
+    private Thread writer;
+
     public ClientSide(String ip, int port) {
         try {
             // connect to server
             client = new Socket(ip, port);
+            client.setKeepAlive(true);
 
             // write outStream the connection
             outStream = new PrintWriter(client.getOutputStream(),
@@ -35,37 +46,72 @@ public class ClientSide {
     }
 
     public void init() {
-        Scanner keyboard = new Scanner(System.in);
 
-        while (!client.isClosed()) {
-            System.out.print("Me > ");
-            String message = keyboard.nextLine();
+        String userName = null;
+        String password = null;
+        Scanner scan = new Scanner(System.in);
 
-//            String out = constructMessage(message);
+        /* Initial Login sequence */
+        /* TCP connection will established temporarily for validation */
+        try {
+            System.out.println("/***** Login *****/");
+            System.out.print("User Name: ");
+            userName = scan.nextLine();
+            System.out.print("Password: ");
+            password = scan.nextLine();
 
-            if (this.outStream != null) {
-                outStream.println(message.replace("Me >", ""));
-            }
+            outStream.println(",Login," + userName + "," + password);
 
-            try {
-                if (inStream.ready()) {
-                    String msg = inStream.readLine();
-                    System.out.println(msg);
+            String verify = inStream.readLine();
+
+            if (!verify.equals(ErrorMessages.SUCCESS)) {
+                System.out.println(verify);
+                System.out.println("User name not found");
+                System.out.println("would you like to register? [y/n]");
+                String response = scan.nextLine();
+
+                if (response.equalsIgnoreCase("y")) {
+                    outStream.println(",Register," + userName + "," + password);
+                    verify = inStream.readLine();
+
+                    if (verify.equals(ErrorMessages.SUCCESS)) {
+                        System.out.println(ErrorMessages.SUCCESS);
+                        /* log newly registered user automatically after registration */
+                        outStream.println(",Login," + userName + "," + password);
+                        verify = inStream.readLine();
+                        if (!verify.equals(ErrorMessages.SUCCESS)) {
+                            System.out.println("Login failed");
+                            return;
+                        }
+                    } else {
+                        System.out.println("Okay. Bye");
+                        client.close();
+                        return;
+                    }
+                } else {
+                    System.out.println("Okay. Bye");
+                    client.close();
+                    return;
                 }
-            } catch (IOException e) {
-//                System.out.println("Not ready");
-            }
-
-            if (message.contains("disconnect")) {
-                System.out.println("Ending chatroom");
-                break;
-            }
+            } else System.out.println(verify);
+        } catch (IOException e) {
+            //
         }
-    }
 
-    private String constructMessage(String msg) {
-        String out = String.format("<MSG, " + msg + ">");
+        /* Names after the client user name */
+        this.reader = new Reader(userName, client);
+        this.writer = new Writer(userName, client);
 
-        return out;
+        this.reader.start();
+        this.writer.start();
+
+        try {
+            this.reader.join();
+            writer.interrupt();
+
+            this.writer.join();
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

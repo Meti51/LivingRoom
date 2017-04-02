@@ -12,14 +12,23 @@ public class Command {
 
     public Command(String raw) {
         this.raw = raw;
+
+        String[] p = parse(raw);
+        this.function = p[0];
+        this.payload = p[1];
+
     }
 
     public String getFunction() {
-        return parse(raw)[0];
+        return function;
     }
 
     public String getPayload() {
-        return parse(raw)[1];
+        return payload;
+    }
+
+    public String toString() {
+        return function + " " + payload;
     }
 
     /**

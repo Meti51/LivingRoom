@@ -10,8 +10,10 @@ import java.net.Socket;
 public class Request {
     private Socket conn;
     private Command command;
+    private String requester;
 
-    public Request(Command command, Socket conn) {
+    public Request(String requester, Command command, Socket conn) {
+        this.requester = requester;
         this.conn = conn;
         this.command = command;
     }
@@ -22,5 +24,13 @@ public class Request {
 
     public Command getCmd() {
         return command;
+    }
+
+    public String getRequester () {
+        return requester;
+    }
+
+    public String toString() {
+        return command.toString();
     }
 }

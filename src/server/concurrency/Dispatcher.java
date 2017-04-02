@@ -30,60 +30,87 @@ public class Dispatcher extends Thread {
     @Override
     public void run() {
         Socket client = null;
-        BufferedReader in = null;
+        BufferedReader in;
 
         System.out.println(getName() + " Started");
 
-        while(true) {
+        while(!Thread.interrupted()) {
             try {
                 client = server.accept();
                 System.out.println(getName() + " connected to " + client.toString());
                 in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-                /* Add request to buffer. will be serviced with worker threads */
-                queue.offer(new Request(new Command(in.readLine()), client));
+                /* Keep connection for client */
+                while (!client.isClosed()) {
+                    String req = in.readLine();
 
-                System.out.println(getName() + " Added to buffer");
+                    if (validate(req)) {
+                        /* Add request to buffer. will be serviced with worker threads */
+                        queue.offer(parse(req, client));
+                    }
+
+                    // Don't stress the CPU
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+//                        System.out.println(e.getMessage());
+                        break;
+                    }
+                }
             } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
-
-            // Don't stress the CPU
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            /* way to stop threads */
-            if (Thread.interrupted()) {
-                System.out.println("ServerSide Preparing to terminate");
-                break;
+                System.out.println(client + " " + e.getMessage());
             }
         }
+        System.out.println(getName() + " Stopped");
     }
 
     /**
      * validate incoming command
-     * returns true if validation failed.
+     * returns false if validation failed.
      *
      * @param command -
      * @return -
      */
     private boolean validate(String command) {
         if (command == null) {
-            return true;
+            return false;
         }
         if (command.isEmpty()) {
-            return true;
+            return false;
         }
 
-//        char[] val = command.toCharArray();
-//
-//        if (val[0] != '<' || val[val.length-1] != '>') {
-//            return true;
-//        }
+        String[] val = command.split(",");
 
-        return false;
+        if (val.length == 1) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     *
+     *
+     * @param req -
+     * @param client -
+     * @return -
+     */
+    private Request parse(String req, Socket client) {
+        Request request = null;
+
+        String spiltRaw[] = req.split(",");
+        String requester = spiltRaw[0];
+
+        String rawCmd = "";
+        for (int i = 1; i < spiltRaw.length; i++) {
+            rawCmd = rawCmd.concat(spiltRaw[i].trim());
+            if (i < spiltRaw.length - 1) {
+                rawCmd = rawCmd.concat(",");
+            }
+        }
+        Command cmd = new Command(rawCmd);
+        request = new Request(requester, cmd, client);
+
+        return request;
     }
 }

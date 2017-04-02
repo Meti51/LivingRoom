@@ -7,17 +7,19 @@ package server;
 public class StartServer {
 
     public static void main(String[] args) {
-        System.out.println("ServerSide starting ...");
-        ServerSide server = new ServerSide(args[0], 4444, 10);
+        System.out.println("Server starting ...");
+        Server server = new Server(args[0], 4444, 3);
         server.init();
+        server.joinThreads();
 
         try {
-            Thread.sleep(10000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        server.stop();
-        System.out.println("ServerSide Terminated");
+
+        server.preterminationCleanup();
+        System.out.println("Server Terminated");
     }
 
 }
