@@ -1,6 +1,5 @@
 package server;
 
-import client.ClientSide;
 import server.client.Client;
 import server.concurrency.Dispatcher;
 import server.concurrency.Worker;
@@ -12,8 +11,10 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * Created by Natnael on 3/29/2017.
+ * Main server app
  *
+ * Created on 3/29/2017.
+ * @author Natnael Seifu [seifu003]
  */
 public class Server {
 
@@ -54,7 +55,7 @@ public class Server {
     }
 
     /**
-     *
+     * Block main process from terminating before threads
      */
     public void joinThreads() {
         // Join worker threads

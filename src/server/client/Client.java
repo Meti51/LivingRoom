@@ -18,7 +18,8 @@ public class Client {
     public Client(String userName, String password) {
         this.userName = userName;
         this.password = password;
-        /* When loading registered clients */
+        /* When loading registered clients
+           won't have connections yet */
         this.connection = null;
     }
 
@@ -46,7 +47,7 @@ public class Client {
      * Clients are equal if their user name
      * are equal.
      *
-     * @param obj -
+     * @param obj - Client
      * @return -
      */
     @Override

@@ -11,7 +11,7 @@ import java.net.Socket;
  * client.
  *
  * Created on 4/1/2017.
- * @author Natnael
+ * @author Natnael Seifu [seifu003]
  */
 public class Reader extends Thread {
 
@@ -47,7 +47,7 @@ public class Reader extends Thread {
                     break;
                 }
             } catch (IOException e) {
-                System.out.println(e.getMessage());
+                System.out.println(getName() + " " + e.getMessage());
                 break;
             }
 
@@ -59,7 +59,6 @@ public class Reader extends Thread {
                 break;
             }
         }
-
         System.out.println(getName() + "'s Reader thread has terminated");
     }
 }

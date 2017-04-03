@@ -1,8 +1,10 @@
 package server.command;
 
 /**
- * Created by Natnael on 3/30/2017.
+ * Parse Raw commands
  *
+ * Created on 3/30/2017.
+ * @author Natnael Seifu [seifu003]
  */
 public class Command {
 
@@ -51,6 +53,7 @@ public class Command {
         result[0] = "";
         result[1] = "";
 
+        /* message after FUNC string is removed */
         String payload = "";
         for (int i = 1; i < cmd.length; i++) {
             payload = payload.concat(cmd[i].trim());

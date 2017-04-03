@@ -14,14 +14,15 @@ import java.util.Queue;
  * Accept connection from client and place request
  * in service buffer. operations need to be atomic.
  *
- * Created by Natnael on 3/30/2017.
+ * Created on 3/30/2017.
+ * @author Natnael Seifu [seifu003]
  */
 public class Dispatcher extends Thread {
 
     private Queue<Request> queue;
     private ServerSocket server;
 
-    public Dispatcher(String name, ServerSocket server, Queue clientQueue) {
+    public Dispatcher(String name, ServerSocket server, Queue<Request> clientQueue) {
         super(name);
         this.queue = clientQueue;
         this.server = server;
@@ -68,7 +69,7 @@ public class Dispatcher extends Thread {
      * validate incoming command
      * returns false if validation failed.
      *
-     * @param command -
+     * @param command - incoming transmission
      * @return -
      */
     private boolean validate(String command) {
@@ -89,14 +90,14 @@ public class Dispatcher extends Thread {
     }
 
     /**
+     * Create Request from incoming transmission
      *
-     *
-     * @param req -
-     * @param client -
-     * @return -
+     * @param req - raw transmission
+     * @param client - connection to client
+     * @return - Request object
      */
     private Request parse(String req, Socket client) {
-        Request request = null;
+        Request request;
 
         String spiltRaw[] = req.split(",");
         String requester = spiltRaw[0];

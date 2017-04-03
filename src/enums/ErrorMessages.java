@@ -1,8 +1,10 @@
 package enums;
 
 /**
- * Created by Natnael on 3/29/2017.
+ * Mainly used by server and Client app
  *
+ * Created on 3/29/2017.
+ * @author Natnael Seifu [seifu003]
  */
 public class ErrorMessages {
     public static final String SUCCESS = "0x00 Success";

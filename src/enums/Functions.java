@@ -1,8 +1,10 @@
 package enums;
 
 /**
- * Created by Natnael on 3/29/2017.
+ * Needed for worker threads main loop.
  *
+ * Created on 3/29/2017.
+ * @author Natnael Seifu [seifu003]
  */
 public class Functions {
     public static final String REGISTER = "REGISTER";

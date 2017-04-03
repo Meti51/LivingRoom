@@ -1,6 +1,8 @@
 package server;
 
 /**
+ * Helper class to start Server
+ *
  * Created by Natnael on 3/29/2017.
  * start multithreaded server.
  */
@@ -12,11 +14,11 @@ public class StartServer {
         server.init();
         server.joinThreads();
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         server.preterminationCleanup();
         System.out.println("Server Terminated");

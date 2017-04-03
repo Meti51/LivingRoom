@@ -43,9 +43,9 @@ public class Worker extends Thread {
 
         while(!Thread.interrupted()) {
             try {
-                /* Remove Request from buffer if any */
+                /* Remove Request from buffer if any. Operation is atomic */
                 if ((request = (Request) serviceBuffer.poll()) != null) {
-                    System.out.println(getName() + " Servicing ...");
+
                     Command cmd = request.getCmd();
                     String clientUserName = request.getRequester();
                     Socket clientSocket = request.getConnection();
@@ -83,8 +83,9 @@ public class Worker extends Thread {
 
                     System.out.println(getName() + " Done");
                 }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+            } catch (IOException e) {
+                System.out.println("Service was not successful");
+                System.out.println(getName() + " " + e.getMessage());
             }
 
             /* Close writer because it is unique to each client */
@@ -92,9 +93,9 @@ public class Worker extends Thread {
 
             // Don't stress the CPU
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
+                System.out.println(getName() + " " + e.getMessage());
                 break;
             }
         }
@@ -102,10 +103,10 @@ public class Worker extends Thread {
     }
 
     /**
+     * Register Sequence
      *
-     *
-     * @param socket -
-     * @param payload -
+     * @param socket - client connection
+     * @param payload - username, password
      * @throws IOException -
      */
     private synchronized void register(Socket socket, String payload) throws IOException {
@@ -128,18 +129,16 @@ public class Worker extends Thread {
     }
 
     /**
+     * Login sequence
      *
-     *
-     * @param socket -
-     * @param payload -
+     * @param socket - client connection
+     * @param payload - username, password
      */
     private synchronized void login(Socket socket, String payload) throws IOException {
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
         String[] input = payload.split(",");
         Client client = null;
-
-//        System.out.println("In Login" + Arrays.toString(input));
 
         if (input.length == 2) {
             String userName = input[0];
@@ -156,20 +155,18 @@ public class Worker extends Thread {
 
             if (client != null) {
                 if (client.getPassword().equals(password)) {
-                    if(!activeList.contains(client)) {
-                        /* add client to active list */
-                        client.setConnection(socket);
-                        activeList.add(client);
-                    }
+                    /* add client to active list */
+                    client.setConnection(socket);
+                    activeList.add(client);
                     /* Sent response */
                     out.println(ErrorMessages.SUCCESS);
                 } else {
                     out.println(ErrorMessages.ACCESSDENIED);
-                    client.getConnection().close();
+                    socket.close();
                 }
             } else {
                 out.println(ErrorMessages.ACCESSDENIED);
-                client.getConnection().close();
+                socket.close();
             }
         } else
             out.println(ErrorMessages.INVALIDFORMAT);
@@ -178,13 +175,14 @@ public class Worker extends Thread {
     /**
      *
      *
-     * @param sender -
-     * @param message -
+     * @param sender - user name
+     * @param message - message to broadcase
      * @throws IOException -
      */
     private synchronized void message(String sender, Command message) throws IOException {
         // broad cast message to all online clients
-        PrintWriter broadCast = null;
+        PrintWriter broadCast;
+        System.out.println("sending message");
         for (Client client: activeList) {
             if (!client.getUserName().equals(sender)) {
                 broadCast = new PrintWriter(client.getConnection().getOutputStream(),
@@ -195,9 +193,9 @@ public class Worker extends Thread {
     }
 
     /**
+     * send list of active [logged] in clients
      *
-     *
-     * @param client -
+     * @param client - Client connection
      */
     private synchronized void clist(Socket client) throws IOException {
         // broad cast message to all online clients
@@ -209,17 +207,15 @@ public class Worker extends Thread {
     }
 
     /**
+     * close client connection and remove from active list
      *
-     *
-     * @param clientID -
-     * @param client -
-     * @throws IOException
+     * @param clientID - username
+     * @param client - client connection
+     * @throws IOException -
      */
     private synchronized void disconnect(String clientID, Socket client) throws IOException {
         // disconnect a client aka remove from active list\
         activeList.remove(new Client(clientID, ""));
-        //TODO remove later
-        System.out.println(activeList);
         client.close();
     }
 }
