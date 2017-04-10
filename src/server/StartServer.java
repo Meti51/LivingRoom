@@ -10,7 +10,7 @@ public class StartServer {
 
     public static void main(String[] args) {
         System.out.println("Server starting ...");
-        Server server = new Server(args[0], 4444, 3);
+        Server server = new Server(args[0], 4444, 1);
         server.init();
         server.joinThreads();
 

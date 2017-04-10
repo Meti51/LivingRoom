@@ -12,4 +12,7 @@ public class Functions {
     public static final String MSG = "MSG";
     public static final String DISCONNECT = "DISCONNECT";
     public static final String CLIST = "CLIST";
+    public static final String FLIST = "FLIST";
+    public static final String FPUT = "FPUT";
+    public static final String FGET = "FGET";
 }

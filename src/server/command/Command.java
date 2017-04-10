@@ -1,5 +1,7 @@
 package server.command;
 
+import java.util.Arrays;
+
 /**
  * Parse Raw commands
  *

@@ -1,17 +1,16 @@
 package server.concurrency;
 
-import client.ClientSide;
+
 import enums.ErrorMessages;
 import enums.Functions;
-import enums.ServerStatus;
+import java.util.HashMap;
+import java.util.Iterator;
 import server.client.Client;
 import server.command.Command;
 import server.request.Request;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
@@ -27,19 +26,30 @@ public class Worker extends Thread {
     private Queue serviceBuffer;
     private Set<Client> activeList;
     private Set<Client> registered;
+    private HashMap fileList;
 
-    public Worker (String name, Queue buffer, Set<Client> activeList, Set<Client> registered) {
+    /**
+     *
+     * @param name thread name
+     * @param buffer work buffer
+     * @param activeList list of logged in clients
+     * @param registered list of registered clients
+     * @param fileList list of files
+     */
+    public Worker (String name, Queue buffer, Set<Client> activeList,
+        Set<Client> registered, HashMap fileList) {
         super(name);
         this.serviceBuffer = buffer;
         this.activeList = activeList;
         this.registered = registered;
+        this.fileList = fileList;
     }
 
     @Override
     public void run() {
         System.out.println(getName() + " Started");
-        Request request;
-        PrintWriter out = null;
+        Request request = null;
+        PrintWriter out;
 
         while(!Thread.interrupted()) {
             try {
@@ -47,7 +57,6 @@ public class Worker extends Thread {
                 if ((request = (Request) serviceBuffer.poll()) != null) {
 
                     Command cmd = request.getCmd();
-                    String clientUserName = request.getRequester();
                     Socket clientSocket = request.getConnection();
 
                     out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -63,15 +72,27 @@ public class Worker extends Thread {
                             break;
 
                         case Functions.MSG:
-                            message(clientUserName, cmd);
+                            message(cmd);
                             break;
 
                         case Functions.CLIST:
                             clist(clientSocket);
                             break;
 
+                        case Functions.FLIST:
+                            flist(clientSocket);
+                            break;
+
+                        case Functions.FPUT:
+                            fput(cmd.getPayload());
+                            break;
+
+                        case Functions.FGET:
+                            fget(cmd.getPayload());
+                            break;
+
                         case Functions.DISCONNECT:
-                            disconnect(clientUserName, clientSocket);
+                            disconnect(clientSocket);
                             break;
 
                         default:
@@ -80,16 +101,11 @@ public class Worker extends Thread {
                             break;
 
                     }
-
-                    System.out.println(getName() + " Done");
                 }
             } catch (IOException e) {
-                System.out.println("Service was not successful");
+                System.out.println("Service was not successful: " + request);
                 System.out.println(getName() + " " + e.getMessage());
             }
-
-            /* Close writer because it is unique to each client */
-//            if (out != null) out.close();
 
             // Don't stress the CPU
             try {
@@ -155,11 +171,17 @@ public class Worker extends Thread {
 
             if (client != null) {
                 if (client.getPassword().equals(password)) {
+                    if (!activeList.contains(client)) {
                     /* add client to active list */
-                    client.setConnection(socket);
-                    activeList.add(client);
+                        client.setConnection(socket);
+                        activeList.add(client);
                     /* Sent response */
-                    out.println(ErrorMessages.SUCCESS);
+                        out.println(ErrorMessages.SUCCESS);
+                    } else {
+                        /* already logged in */
+                        out.println(ErrorMessages.ACCESSDENIED);
+                        socket.close();
+                    }
                 } else {
                     out.println(ErrorMessages.ACCESSDENIED);
                     socket.close();
@@ -168,27 +190,26 @@ public class Worker extends Thread {
                 out.println(ErrorMessages.ACCESSDENIED);
                 socket.close();
             }
-        } else
+        } else {
             out.println(ErrorMessages.INVALIDFORMAT);
+            socket.close();
+        }
     }
 
     /**
      *
      *
-     * @param sender - user name
      * @param message - message to broadcase
      * @throws IOException -
      */
-    private synchronized void message(String sender, Command message) throws IOException {
+    private synchronized void message(Command message) throws IOException {
         // broad cast message to all online clients
         PrintWriter broadCast;
         System.out.println("sending message");
         for (Client client: activeList) {
-            if (!client.getUserName().equals(sender)) {
-                broadCast = new PrintWriter(client.getConnection().getOutputStream(),
-                        true);
-                broadCast.println(sender + " > " + message.getPayload());
-            }
+            broadCast = new PrintWriter(client.getConnection().getOutputStream(),
+                true);
+            broadCast.println(message.getPayload());
         }
     }
 
@@ -200,22 +221,57 @@ public class Worker extends Thread {
     private synchronized void clist(Socket client) throws IOException {
         // broad cast message to all online clients
         PrintWriter sendList = new PrintWriter(client.getOutputStream(),
-                true);
+            true);
 
         sendList.println(activeList);
         sendList.println(ErrorMessages.SUCCESS);
     }
 
     /**
+     * Server will respond with list file names and ids.
+     *
+     * @param client -
+     */
+    private synchronized void flist(Socket client) {
+
+    }
+
+    /**
+     * Add file name to server along with client info.
+     *
+     * @param payload - contains [filename, ip_addr and port]
+     */
+    private synchronized void fput(String payload) {
+
+    }
+
+    /**
+     * The server will return client detail that has file.
+     *
+     * @param payload contains file_ID
+     */
+    private synchronized void fget(String payload) {
+
+    }
+
+    /**
      * close client connection and remove from active list
      *
-     * @param clientID - username
      * @param client - client connection
      * @throws IOException -
      */
-    private synchronized void disconnect(String clientID, Socket client) throws IOException {
+    private synchronized void disconnect(Socket client) throws IOException {
         // disconnect a client aka remove from active list\
-        activeList.remove(new Client(clientID, ""));
         client.close();
+        Iterator<Client> it = activeList.iterator();
+
+        // remove disconnected clients from active list
+        while (it.hasNext()) {
+            Client c = it.next();
+
+            if (c.getConnection().isClosed()) {
+                it.remove();
+            }
+        }
     }
 }

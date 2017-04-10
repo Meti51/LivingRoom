@@ -3,6 +3,7 @@ package server;
 import server.client.Client;
 import server.concurrency.Dispatcher;
 import server.concurrency.Worker;
+import server.file.File;
 import server.request.Request;
 
 import java.io.*;
@@ -18,9 +19,17 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class Server {
 
+    /*
+    Should be changed by clientThreadCounter() only
+    to avoid synchronization issues.
+    */
+    private static int clientThreadCounter = 0;
+
     /* Active clients */
     /* Hold requests here */
     private Queue<Request> serviceBuffer = new ConcurrentLinkedQueue<>();
+    /* list of file ids and details */
+    private HashMap<String, File> fileList;
     /* Logged in  Clients */
     private Set<Client> activeList;
     /* Registered clients */
@@ -40,6 +49,7 @@ public class Server {
             server = new ServerSocket(port);
             activeList = new HashSet<>();
             registered = new HashSet<>();
+            fileList = new HashMap<>();
         } catch (IOException e) {
             System.out.println("Could not listen on port " + port);
             e.printStackTrace();
@@ -49,7 +59,7 @@ public class Server {
     /**
      * Initialize server
      */
-    public void init() {
+    void init() {
         loadRegistered(filePath);
         createThreadpool(howManyThreads);
     }
@@ -57,7 +67,7 @@ public class Server {
     /**
      * Block main process from terminating before threads
      */
-    public void joinThreads() {
+    void joinThreads() {
         // Join worker threads
         for (Thread worker: workers) {
             try {
@@ -81,7 +91,7 @@ public class Server {
      * Terminate Server
      * waits until all threads has finished.
      */
-    public void preterminationCleanup() {
+    void preterminationCleanup() {
 
         try {
             server.close();
@@ -193,14 +203,40 @@ public class Server {
     private void createThreadpool(int howmany) {
         workers = new Thread[howmany];
         for (int i = 0; i < howmany; i++) {
-            workers[i] = new Worker("Worker Thread #" + i, serviceBuffer, activeList, registered);
+            workers[i] = new Worker("Worker Thread #" + i, serviceBuffer,
+                activeList, registered, fileList);
             workers[i].start();
         }
 
         dispatchers = new Thread[howmany];
         for (int i = 0; i < howmany; i++) {
-            dispatchers[i] = new Dispatcher("Dispatcher Thread #" + i, server, serviceBuffer);
+            dispatchers[i] = new Dispatcher("Dispatcher Thread #" + i, server,
+                serviceBuffer);
             dispatchers[i].start();
         }
+    }
+
+    /**
+     * controls thread clientThreadCounter.
+     * enter positiver number to increment
+     * negative number to decrement.
+     *
+     * @param offset -
+     * @return -1 on fail or 0 on success
+     */
+    public synchronized static int clientThreadCounter(int offset) {
+        int check = Math.abs(offset);
+        if (check > 1) return -1;
+        clientThreadCounter += offset;
+        return 0;
+    }
+
+    /**
+     * for synchronized read.
+     *
+     * @return -
+     */
+    public synchronized static int getClientThreadCounter() {
+        return clientThreadCounter;
     }
 }

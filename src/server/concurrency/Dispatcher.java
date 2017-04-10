@@ -1,5 +1,8 @@
 package server.concurrency;
 
+import static enums.Limits.CLIENTTHREADLIMIT;
+
+import server.Server;
 import server.command.Command;
 import server.request.Request;
 
@@ -31,37 +34,79 @@ public class Dispatcher extends Thread {
     @Override
     public void run() {
         Socket client = null;
-        BufferedReader in;
+        BufferedReader in = null;
 
         System.out.println(getName() + " Started");
 
         while(!Thread.interrupted()) {
+            /* Accept connection */
             try {
                 client = server.accept();
-                System.out.println(getName() + " connected to " + client.toString());
-                in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-
-                /* Keep connection for client */
-                while (!client.isClosed()) {
-                    String req = in.readLine();
-
-                    if (validate(req)) {
-                        /* Add request to buffer. will be serviced with worker threads */
-                        queue.offer(parse(req, client));
-                    }
-
-                    // Don't stress the CPU
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-//                        System.out.println(e.getMessage());
-                        break;
-                    }
-                }
             } catch (IOException e) {
-                System.out.println(client + " " + e.getMessage());
+                System.out.println("Dispatchet Accept: " + e.getMessage());
+            }
+
+            assert client != null;
+            System.out.println(getName() + " connected to " + client.toString());
+
+            try {
+                in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            } catch (IOException e) {
+                System.out.println("Dispatcher reader: " + e.getMessage());
+            }
+
+            /*
+            Create new thread to handle
+            persistent connection.
+             */
+            Socket finalClient = client;
+            BufferedReader finalIn = in;
+            if (Server.getClientThreadCounter() < CLIENTTHREADLIMIT) {
+                new Thread() {
+                    public void run() {
+                        /* Keep connection for client */
+                        while (finalIn != null) {
+                            try {
+                                String req = finalIn.readLine();
+
+                                if (validate(req)) {
+                                    /*
+                                    Add request to buffer and will be
+                                    serviced by worker threads.
+                                    */
+                                    queue.offer(new Request(new Command(req), finalClient));
+                                }
+
+                            } catch (IOException e) {
+                                /* client ended connection */
+                                System.out.println("Client: " + e.getMessage());
+                                try {
+                                    finalClient.close();
+                                    break;
+                                } catch (IOException e1) {
+                                    System.out.println(e1.getMessage());
+                                }
+                                return;
+                            }
+
+                            // Don't stress the CPU
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                break;
+                            }
+                        }
+                        Server.clientThreadCounter(-1);
+                    }
+                }.start();
+                /* synchronized thread clientThreadCounter increment */
+                Server.clientThreadCounter(1);
+            } else {
+                System.out.println("Persistent thread creation limit reached");
+                queue.offer(new Request(new Command("disconnect"), client));
             }
         }
+
         System.out.println(getName() + " Stopped");
     }
 
@@ -80,38 +125,6 @@ public class Dispatcher extends Thread {
             return false;
         }
 
-        String[] val = command.split(",");
-
-        if (val.length == 1) {
-            return false;
-        }
-
         return true;
-    }
-
-    /**
-     * Create Request from incoming transmission
-     *
-     * @param req - raw transmission
-     * @param client - connection to client
-     * @return - Request object
-     */
-    private Request parse(String req, Socket client) {
-        Request request;
-
-        String spiltRaw[] = req.split(",");
-        String requester = spiltRaw[0];
-
-        String rawCmd = "";
-        for (int i = 1; i < spiltRaw.length; i++) {
-            rawCmd = rawCmd.concat(spiltRaw[i].trim());
-            if (i < spiltRaw.length - 1) {
-                rawCmd = rawCmd.concat(",");
-            }
-        }
-        Command cmd = new Command(rawCmd);
-        request = new Request(requester, cmd, client);
-
-        return request;
     }
 }

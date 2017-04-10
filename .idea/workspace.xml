@@ -16,11 +16,53 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="README.txt" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/README.txt">
+      <file leaf-file-name="Server.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/server/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="10" column="83" lean-forward="false" selection-start-line="10" selection-start-column="83" selection-end-line="10" selection-end-column="83" />
+            <state relative-caret-position="185">
+              <caret line="206" column="50" lean-forward="true" selection-start-line="206" selection-start-column="50" selection-end-line="206" selection-end-column="50" />
+              <folding>
+                <element signature="e#6566#6567#0" expanded="true" />
+                <element signature="e#6608#6609#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="File.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/server/file/File.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="238">
+              <caret line="18" column="31" lean-forward="true" selection-start-line="18" selection-start-column="31" selection-end-line="18" selection-end-column="31" />
+              <folding>
+                <element signature="e#551#552#0" expanded="true" />
+                <element signature="e#570#571#0" expanded="true" />
+                <element signature="e#609#610#0" expanded="true" />
+                <element signature="e#640#641#0" expanded="true" />
+                <element signature="e#676#677#0" expanded="true" />
+                <element signature="e#704#705#0" expanded="true" />
+                <element signature="e#737#738#0" expanded="true" />
+                <element signature="e#762#763#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="IDGenerator.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/server/file/IDGenerator.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="16" column="41" lean-forward="true" selection-start-line="16" selection-start-column="41" selection-end-line="16" selection-end-column="41" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Worker.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/server/concurrency/Worker.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="244">
+              <caret line="252" column="52" lean-forward="false" selection-start-line="252" selection-start-column="52" selection-end-line="252" selection-end-column="52" />
               <folding />
             </state>
           </provider>
@@ -70,26 +112,29 @@
         <option value="$PROJECT_DIR$/src/client/Client.java" />
         <option value="$PROJECT_DIR$/src/server/User.java" />
         <option value="$PROJECT_DIR$/src/server/user/User.java" />
-        <option value="$PROJECT_DIR$/src/server/files/registered.txt" />
         <option value="$PROJECT_DIR$/src/server/ServerSide.java" />
         <option value="$PROJECT_DIR$/src/client/concurrency/ClientDispatcher.java" />
         <option value="$PROJECT_DIR$/src/client/work/ClientWork.java" />
         <option value="$PROJECT_DIR$/src/client/Request.java" />
-        <option value="$PROJECT_DIR$/src/server/StartServer.java" />
         <option value="$PROJECT_DIR$/README.txt" />
-        <option value="$PROJECT_DIR$/src/client/concurrency/Reader.java" />
-        <option value="$PROJECT_DIR$/src/client/concurrency/Writer.java" />
-        <option value="$PROJECT_DIR$/src/client/ClientSide.java" />
         <option value="$PROJECT_DIR$/src/client/StartClient.java" />
         <option value="$PROJECT_DIR$/src/enums/ErrorMessages.java" />
-        <option value="$PROJECT_DIR$/src/enums/Functions.java" />
         <option value="$PROJECT_DIR$/src/enums/ServerStatus.java" />
         <option value="$PROJECT_DIR$/src/server/client/Client.java" />
-        <option value="$PROJECT_DIR$/src/server/command/Command.java" />
-        <option value="$PROJECT_DIR$/src/server/concurrency/Dispatcher.java" />
-        <option value="$PROJECT_DIR$/src/server/concurrency/Worker.java" />
+        <option value="$PROJECT_DIR$/src/server/StartServer.java" />
         <option value="$PROJECT_DIR$/src/server/request/Request.java" />
+        <option value="$PROJECT_DIR$/src/server/files/registered.txt" />
+        <option value="$PROJECT_DIR$/src/client/concurrency/Reader.java" />
+        <option value="$PROJECT_DIR$/src/server/command/Command.java" />
+        <option value="$PROJECT_DIR$/src/client/concurrency/Writer.java" />
+        <option value="$PROJECT_DIR$/src/client/ClientSide.java" />
+        <option value="$PROJECT_DIR$/src/enums/Limits.java" />
+        <option value="$PROJECT_DIR$/src/enums/Functions.java" />
+        <option value="$PROJECT_DIR$/src/server/concurrency/Dispatcher.java" />
+        <option value="$PROJECT_DIR$/src/server/file/File.java" />
         <option value="$PROJECT_DIR$/src/server/Server.java" />
+        <option value="$PROJECT_DIR$/src/server/file/IDGenerator.java" />
+        <option value="$PROJECT_DIR$/src/server/concurrency/Worker.java" />
       </list>
     </option>
   </component>
@@ -126,16 +171,128 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MultiThreadedServerAndChatRoom" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MultiThreadedServerAndChatRoom" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MultiThreadedServerAndChatRoom" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MultiThreadedServerAndChatRoom" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MultiThreadedServerAndChatRoom" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MultiThreadedServerAndChatRoom" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="file" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MultiThreadedServerAndChatRoom" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MultiThreadedServerAndChatRoom" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="concurrency" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MultiThreadedServerAndChatRoom" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MultiThreadedServerAndChatRoom" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="enums" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MultiThreadedServerAndChatRoom" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MultiThreadedServerAndChatRoom" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -157,7 +314,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.StartServer">
+  <component name="RunManager" selected="Application.StartClient">
     <configuration default="false" name="StartServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -408,8 +565,8 @@
     </list>
     <recent_temporary>
       <list size="2">
-        <item index="0" class="java.lang.String" itemvalue="Application.StartClient" />
-        <item index="1" class="java.lang.String" itemvalue="Application.StartServer" />
+        <item index="0" class="java.lang.String" itemvalue="Application.StartServer" />
+        <item index="1" class="java.lang.String" itemvalue="Application.StartClient" />
       </list>
     </recent_temporary>
   </component>
@@ -437,15 +594,15 @@
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36908516" sideWeight="0.5058565" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2823344" sideWeight="0.5087848" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2823344" sideWeight="0.4941435" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28864354" sideWeight="0.49121523" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3374817" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21303074" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329653" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -465,7 +622,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="11" />
+      <option name="time" value="12" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -474,6 +631,14 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/README.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/server/StartServer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
@@ -488,6 +653,8 @@
           <caret line="45" column="67" lean-forward="false" selection-start-line="45" selection-start-column="67" selection-end-line="45" selection-end-column="67" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#1845#3463#0" expanded="true" />
+            <element signature="e#3462#3463#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -496,9 +663,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -506,9 +671,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="799">
           <caret line="52" column="44" lean-forward="true" selection-start-line="52" selection-start-column="44" selection-end-line="52" selection-end-column="44" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -540,9 +703,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -550,9 +711,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="612">
           <caret line="36" column="4" lean-forward="false" selection-start-line="36" selection-start-column="4" selection-end-line="36" selection-end-column="4" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -568,92 +727,10 @@
     <entry file="file://$PROJECT_DIR$/src/server/files/registered" />
     <entry file="file://$PROJECT_DIR$/src/server/files/activelist" />
     <entry file="file://$PROJECT_DIR$/src/enums/FileStatus.java" />
-    <entry file="file://$PROJECT_DIR$/src/server/files/activelist.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/client/concurrency/worker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="19" lean-forward="false" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/client/work/ClientWork.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="3" lean-forward="false" selection-start-line="4" selection-start-column="3" selection-end-line="4" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/client/Request.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/files/registered.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/StartServer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="31" lean-forward="false" selection-start-line="3" selection-start-column="31" selection-end-line="3" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/client/concurrency/Reader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="60" column="9" lean-forward="false" selection-start-line="60" selection-start-column="9" selection-end-line="60" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/client/concurrency/Writer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="56" column="9" lean-forward="false" selection-start-line="56" selection-start-column="9" selection-end-line="56" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/client/ClientSide.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="822">
-          <caret line="55" column="23" lean-forward="true" selection-start-line="55" selection-start-column="23" selection-end-line="55" selection-end-column="23" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/client/StartClient.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="64" lean-forward="false" selection-start-line="12" selection-start-column="64" selection-end-line="12" selection-end-column="64" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/files/activelist.txt" />
+    <entry file="file://$PROJECT_DIR$/src/client/concurrency/worker.java" />
+    <entry file="file://$PROJECT_DIR$/src/client/work/ClientWork.java" />
+    <entry file="file://$PROJECT_DIR$/src/client/Request.java" />
     <entry file="file://$PROJECT_DIR$/src/enums/ErrorMessages.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
@@ -662,83 +739,178 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/enums/Functions.java">
+    <entry file="file://$PROJECT_DIR$/src/README.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="39" lean-forward="false" selection-start-line="3" selection-start-column="39" selection-end-line="3" selection-end-column="39" />
+        <state relative-caret-position="374">
+          <caret line="22" column="31" lean-forward="true" selection-start-line="22" selection-start-column="31" selection-end-line="22" selection-end-column="31" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/enums/ServerStatus.java">
+    <entry file="file://$PROJECT_DIR$/src/client/StartClient.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="44">
-          <caret line="3" column="4" lean-forward="false" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="4" />
+        <state relative-caret-position="238">
+          <caret line="14" column="22" lean-forward="true" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/StartServer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="214">
+          <caret line="22" column="39" lean-forward="true" selection-start-line="22" selection-start-column="39" selection-end-line="22" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/files/registered.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="5" lean-forward="false" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/client/concurrency/Reader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="55" column="34" lean-forward="true" selection-start-line="55" selection-start-column="34" selection-end-line="55" selection-end-column="34" />
           <folding>
-            <element signature="e#237#238#0" expanded="true" />
-            <element signature="e#275#276#0" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/server/client/Client.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="21" column="38" lean-forward="false" selection-start-line="21" selection-start-column="38" selection-end-line="21" selection-end-column="38" />
+        <state relative-caret-position="278">
+          <caret line="57" column="28" lean-forward="true" selection-start-line="57" selection-start-column="28" selection-end-line="57" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/request/Request.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="23" column="19" lean-forward="false" selection-start-line="23" selection-start-column="19" selection-end-line="23" selection-end-column="19" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#439#440#0" expanded="false" />
+            <element signature="e#469#470#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/enums/ServerStatus.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="248">
+          <caret line="15" column="23" lean-forward="false" selection-start-line="15" selection-start-column="23" selection-end-line="15" selection-end-column="23" />
+          <folding>
+            <element signature="e#237#238#0" expanded="false" />
+            <element signature="e#275#276#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/server/command/Command.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="21" lean-forward="false" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
+        <state relative-caret-position="612">
+          <caret line="57" column="50" lean-forward="true" selection-start-line="57" selection-start-column="50" selection-end-line="57" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/client/concurrency/Writer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="9" column="16" lean-forward="false" selection-start-line="9" selection-start-column="16" selection-end-line="9" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/client/ClientSide.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="201">
+          <caret line="150" column="55" lean-forward="true" selection-start-line="150" selection-start-column="55" selection-end-line="150" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/enums/Limits.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="47" lean-forward="false" selection-start-line="9" selection-start-column="47" selection-end-line="9" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/enums/Functions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="43" lean-forward="false" selection-start-line="16" selection-start-column="43" selection-end-line="16" selection-end-column="43" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/server/concurrency/Dispatcher.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-644">
-          <caret line="17" column="35" lean-forward="false" selection-start-line="17" selection-start-column="35" selection-end-line="17" selection-end-column="35" />
+        <state relative-caret-position="272">
+          <caret line="110" column="5" lean-forward="true" selection-start-line="110" selection-start-column="5" selection-end-line="110" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#1845#3463#0" expanded="true" />
+            <element signature="e#3462#3463#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/concurrency/Worker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1663">
-          <caret line="109" column="28" lean-forward="true" selection-start-line="109" selection-start-column="28" selection-end-line="109" selection-end-column="28" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/request/Request.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-109">
-          <caret line="5" column="3" lean-forward="false" selection-start-line="5" selection-start-column="3" selection-end-line="5" selection-end-column="3" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/server/Server.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="731">
-          <caret line="51" column="4" lean-forward="false" selection-start-line="51" selection-start-column="4" selection-end-line="51" selection-end-column="4" />
+        <state relative-caret-position="185">
+          <caret line="206" column="50" lean-forward="true" selection-start-line="206" selection-start-column="50" selection-end-line="206" selection-end-column="50" />
+          <folding>
+            <element signature="e#6566#6567#0" expanded="true" />
+            <element signature="e#6608#6609#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/file/File.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="18" column="31" lean-forward="true" selection-start-line="18" selection-start-column="31" selection-end-line="18" selection-end-column="31" />
+          <folding>
+            <element signature="e#551#552#0" expanded="true" />
+            <element signature="e#570#571#0" expanded="true" />
+            <element signature="e#609#610#0" expanded="true" />
+            <element signature="e#640#641#0" expanded="true" />
+            <element signature="e#676#677#0" expanded="true" />
+            <element signature="e#704#705#0" expanded="true" />
+            <element signature="e#737#738#0" expanded="true" />
+            <element signature="e#762#763#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_111/src.zip!/java/lang/String.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="141">
+          <caret line="1459" column="58" lean-forward="true" selection-start-line="1459" selection-start-column="58" selection-end-line="1459" selection-end-column="58" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/README.txt">
+    <entry file="file://$PROJECT_DIR$/src/server/file/IDGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="83" lean-forward="false" selection-start-line="10" selection-start-column="83" selection-end-line="10" selection-end-column="83" />
+        <state relative-caret-position="272">
+          <caret line="16" column="41" lean-forward="true" selection-start-line="16" selection-start-column="41" selection-end-line="16" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/concurrency/Worker.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="244">
+          <caret line="252" column="52" lean-forward="false" selection-start-line="252" selection-start-column="52" selection-end-line="252" selection-end-column="52" />
           <folding />
         </state>
       </provider>

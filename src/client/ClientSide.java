@@ -23,119 +23,186 @@ public class ClientSide {
     private BufferedReader inStream = null;
     private Socket client = null;
 
-    private Thread reader;
-    private Thread writer;
-
     public ClientSide(String ip, int port) {
         try {
             // connect to server
             client = new Socket(ip, port);
             client.setKeepAlive(true);
-
-            // write outStream the connection
-            outStream = new PrintWriter(client.getOutputStream(),
-                    true);
-
-            // read from connection
-            inStream = new BufferedReader(new InputStreamReader(
-                    client.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // write outStream the connection
+        try {
+            outStream = new PrintWriter(client.getOutputStream(),
+                    true);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // read from connection
+        try {
+            inStream = new BufferedReader(new InputStreamReader(
+                    client.getInputStream()));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
+    /**
+     *
+     */
     public void init() {
 
-        String userName = "";
-        String password = "";
-        Scanner scan = new Scanner(System.in);
+        String userName = menu();
 
-        /*
-         * Initial Login sequence
-         * TCP connection will established temporarily for validation
-         * This sequence is good to have for broad cast feature
-         * without it, there now way of knowing where the message
-         * is coming from or who is sending.
-         *
-         * since we need to know who sent the message, we need to know
-         * who is logged on at this time.
-         *
-         * duplicate logins are ignored. duplicate registers throw DUPLICATE_ID
-         * error.
-         *
-         * on initial start up, user is asked to enter user name and password
-         * for login. if the user is registered, login will be successful.
-         * if the user is not registered login will throw an error and user is
-         * asked if he/she want to be registered with the user name and password.
-         * if yes, user will be registered and automatically logged in.
-         * if no, client app is terminate.
-         *
-         * just FYI, it works without login sequence
-         */
-//        try {
-//            /* ask for user name and password */
-//            System.out.println("/***** Login *****/");
-//            System.out.print("User Name: ");
-//            userName = scan.nextLine();
-//            System.out.print("Password: ");
-//            password = scan.nextLine();
-//
-//            /* send to server for verification */
-//            outStream.println(",Login," + userName + "," + password);
-//
-//            String verify = inStream.readLine();
-//
-//            if (!verify.equals(ErrorMessages.SUCCESS)) {
-//                System.out.println(verify);
-//                System.out.println("User name not found");
-//                System.out.println("would you like to register? [y/n]");
-//                String response = scan.nextLine();
-//
-//                if (response.startsWith("y")) {
-//                    outStream.println(",Register," + userName + "," + password);
-//                    verify = inStream.readLine();
-//
-//                    if (verify.equals(ErrorMessages.SUCCESS)) {
-//                        System.out.println(ErrorMessages.SUCCESS);
-//                        /* log newly registered user automatically after registration */
-//                        outStream.println(",Login," + userName + "," + password);
-//                        verify = inStream.readLine();
-//                        if (!verify.equals(ErrorMessages.SUCCESS)) {
-//                            System.out.println("Login failed");
-//                            return;
-//                        }
-//                    } else {
-//                        System.out.println("Okay. Bye");
-//                        client.close();
-//                        return;
-//                    }
-//                } else {
-//                    System.out.println("Okay. Bye");
-//                    client.close();
-//                    return;
-//                }
-//            } else System.out.println(verify);
-//        } catch (IOException e) {
-//            //
-//        }
-
+        if (userName == null) {
+            return;
+        }
         System.out.println("Client App Started");
 
         /* Names Threads after the client user name */
-        this.reader = new Reader(userName, client);
-        this.writer = new Writer(userName, client);
+        Thread reader = new Reader(userName, client);
+        Thread writer = new Writer(userName, client);
 
-        this.reader.start();
-        this.writer.start();
+        reader.start();
+        writer.start();
 
         try {
-            this.reader.join();
+            reader.join();
             /* if reader is interrupted stop writer thread as well */
             writer.interrupt();
-
-            this.writer.join();
+            writer.join();
         } catch (InterruptedException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    /**
+     * show menu to user.
+     * registering will loop and show menu again on success.
+     * terminate application otherwise.
+     *
+     * login will always terminate the menu loop.
+     *
+     * refer to loginSequence() and registerSequence()
+     * for more detail.
+     *
+     * @return -
+     */
+    private String menu () {
+        Scanner scan = new Scanner(System.in);
+        String rVal = null;
+        boolean status = true;
+
+        while (status) {
+            System.out.println("/***** Chat Room *****/");
+            System.out.println("Register -> Press 1");
+            System.out.println("Login -> Press 2");
+            System.out.print("Choice: ");
+
+            String selection = scan.nextLine();
+
+            switch (selection) {
+                case "1":
+                    status = registerSequence();
+                    break;
+                case "2":
+                    rVal = loginSequence();
+                    status = false;
+                    break;
+                default:
+                    System.out.println("INVALID SELECTION: " + selection);
+                    break;
+            }
+        }
+
+        return rVal;
+    }
+
+    /**
+     * client login sequence
+     * returns user name on success
+     * or null on failure.
+     *
+     * @return -
+     */
+    private String loginSequence() {
+
+        String userName;
+        String password;
+        String verify = "";
+
+        Scanner scan = new Scanner(System.in);
+
+        /* ask for user name and password */
+        System.out.println("/***** Login *****/");
+        System.out.print("User Name: ");
+        userName = scan.nextLine();
+        System.out.print("Password: ");
+        password = scan.nextLine();
+
+        /* send to server for verification */
+        outStream.println("Login," + userName + "," + password);
+
+        try {
+            verify = inStream.readLine();
+        } catch (IOException e) {
+            System.out.println("Server refused Login");
+            return null;
+        }
+
+        if (!verify.equals(ErrorMessages.SUCCESS)) {
+            System.out.println(verify);
+            return null;
+        }
+
+        System.out.println(verify);
+
+        return userName;
+    }
+
+    /**
+     * Register a client.
+     * <p>
+     * returns true on success or false on failure.
+     *
+     * @return -
+     */
+    private boolean registerSequence() {
+
+        String userName;
+        String password;
+        String verify = "";
+
+        Scanner scan = new Scanner(System.in);
+
+        /* ask for user name and password */
+        System.out.println("/***** Register *****/");
+        System.out.print("User Name: ");
+        userName = scan.nextLine();
+        System.out.print("Password: ");
+        password = scan.nextLine();
+
+        /* send to server for verification */
+        outStream.println("Register," + userName + "," + password);
+
+        try {
+            verify = inStream.readLine();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        if (verify.equals(ErrorMessages.DUPCLIENTID)) {
+            System.out.println(verify);
+            return false;
+        }
+
+        if (verify.equals(ErrorMessages.INVALIDFORMAT)) {
+            System.out.println(verify);
+            return false;
+        }
+
+        return true;
     }
 }

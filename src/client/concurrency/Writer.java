@@ -6,6 +6,8 @@ import java.net.Socket;
 import java.util.Scanner;
 
 /**
+ * read user input, format and send to server
+ * as a request.
  *
  * Created on 4/1/2017.
  * @author Natnael Seifu [seifu003]
@@ -28,9 +30,10 @@ public class Writer extends Thread {
         PrintWriter outStream;
 
         try {
-            outStream = new PrintWriter(socket.getOutputStream(), true);
+            outStream = new PrintWriter(socket.getOutputStream(),
+                    true);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             return;
         }
 
@@ -38,7 +41,7 @@ public class Writer extends Thread {
         while (!Thread.interrupted()) {
             String message = keyboard.nextLine();
 
-            outStream.println(getName() + "," + message);
+            outStream.println(constTransmission(message));
 
             /*
              * Don't stress the CPU
@@ -49,12 +52,44 @@ public class Writer extends Thread {
              * since it blocks and wait for I/O
              */
             try {
-                Thread.sleep(3000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
 //                System.out.println(e.getMessage());
                 break;
             }
         }
+
         System.out.println(getName() + "'s Writer thread has terminated");
+    }
+
+    /**
+     * formats raw string to server usable
+     * command string.
+     * <p>
+     * Note: this is considered as raw by server.
+     *
+     * @param raw user input
+     * @return formatted command string
+     */
+    private String constTransmission (String raw) {
+        String rVal = raw.trim().toUpperCase();
+
+        switch (rVal) {
+
+            case "CLIST":
+                rVal = "<CLIST>";
+                break;
+
+            case "DISCONNECT":
+                rVal = "<DISCONNECT>";
+                break;
+
+            default:
+                rVal = "<MSG," + "[" + getName() + "] " + raw + ">";
+                break;
+
+        }
+
+        return rVal;
     }
 }

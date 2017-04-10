@@ -32,7 +32,7 @@ public class Reader extends Thread {
         try {
             inStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             return;
         }
 
@@ -53,12 +53,13 @@ public class Reader extends Thread {
 
             // Don't stress the CPU
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
 //                System.out.println(e.getMessage());
                 break;
             }
         }
+
         System.out.println(getName() + "'s Reader thread has terminated");
     }
 }
