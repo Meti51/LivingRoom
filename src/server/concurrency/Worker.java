@@ -3,16 +3,16 @@ package server.concurrency;
 
 import enums.ErrorMessages;
 import enums.Functions;
-import java.util.HashMap;
-import java.util.Iterator;
+
+import java.util.*;
+
 import server.client.Client;
 import server.command.Command;
 import server.request.Request;
+import server.server_file.ServerFile;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Queue;
-import java.util.Set;
 
 /**
  * Servers worker thread.
@@ -26,7 +26,7 @@ public class Worker extends Thread {
     private Queue serviceBuffer;
     private Set<Client> activeList;
     private Set<Client> registered;
-    private HashMap fileList;
+    private HashMap<String, ServerFile> fileList;
 
     /**
      *
@@ -37,7 +37,7 @@ public class Worker extends Thread {
      * @param fileList list of files
      */
     public Worker (String name, Queue buffer, Set<Client> activeList,
-        Set<Client> registered, HashMap fileList) {
+                   Set<Client> registered, HashMap fileList) {
         super(name);
         this.serviceBuffer = buffer;
         this.activeList = activeList;
@@ -84,11 +84,11 @@ public class Worker extends Thread {
                             break;
 
                         case Functions.FPUT:
-                            fput(cmd.getPayload());
+                            fput(clientSocket, cmd.getPayload());
                             break;
 
                         case Functions.FGET:
-                            fget(cmd.getPayload());
+                            fget(clientSocket, cmd.getPayload());
                             break;
 
                         case Functions.DISCONNECT:
@@ -208,7 +208,7 @@ public class Worker extends Thread {
         System.out.println("sending message");
         for (Client client: activeList) {
             broadCast = new PrintWriter(client.getConnection().getOutputStream(),
-                true);
+                    true);
             broadCast.println(message.getPayload());
         }
     }
@@ -221,36 +221,67 @@ public class Worker extends Thread {
     private synchronized void clist(Socket client) throws IOException {
         // broad cast message to all online clients
         PrintWriter sendList = new PrintWriter(client.getOutputStream(),
-            true);
+                true);
 
         sendList.println(activeList);
         sendList.println(ErrorMessages.SUCCESS);
     }
 
     /**
-     * Server will respond with list file names and ids.
+     * Server will respond with list server_file names and ids.
      *
      * @param client -
      */
-    private synchronized void flist(Socket client) {
+    private synchronized void flist(Socket client) throws IOException {
+        PrintWriter sendList = new PrintWriter(client.getOutputStream(),
+                true);
 
+        sendList.println("-------------------- files --------------------------");
+        for (Map.Entry<String, ServerFile> entry: fileList.entrySet()) {
+            sendList.println(entry.getValue());
+        }
+        sendList.println("--------------------- end ---------------------------");
+        sendList.println(ErrorMessages.SUCCESS);
     }
 
     /**
-     * Add file name to server along with client info.
+     * Add server_file name to server along with client info.
      *
-     * @param payload - contains [filename, ip_addr and port]
+     * @param client requester
+     * @param payload contains [filename, ip_addr and port]
      */
-    private synchronized void fput(String payload) {
+    private synchronized void fput(Socket client, String payload) throws IOException {
+        PrintWriter sendList = new PrintWriter(client.getOutputStream(),
+                true);
+        String[] split = payload.split(",");
 
+        if (split.length == 3) {
+
+            /* if ip is unknown */
+            if (split[1].trim().equals("%")) {
+                split[1] = String.valueOf(client.getInetAddress());
+            }
+
+            /* if port is unknown */
+            if (split[2].trim().equals("%")) {
+                split[2] = String.valueOf(client.getPort());
+            }
+
+            ServerFile file = new ServerFile(split[0].trim(), split[1].trim(), split[2].trim());
+            fileList.put(file.getId(), file);
+
+            sendList.println(ErrorMessages.SUCCESS);
+        } else {
+            sendList.println(ErrorMessages.INVALIDFORMAT);
+        }
     }
 
     /**
-     * The server will return client detail that has file.
+     * The server will return client detail that has server_file.
      *
      * @param payload contains file_ID
      */
-    private synchronized void fget(String payload) {
+    private synchronized void fget(Socket client, String payload) {
 
     }
 

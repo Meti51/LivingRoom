@@ -1,10 +1,10 @@
-package server.file;
+package server.server_file;
 
 /**
  * Created on 4/9/2017.
  * @author Natnael Seifu [seifu003]
  */
-public class File {
+public class ServerFile {
 
   private String id;
   private String client_ip_addr;
@@ -12,11 +12,11 @@ public class File {
   /* filename == path of directory/ + filename */
   private String filename;
 
-  public File(String filename, String client_ip_addr, String client_port) {
+  public ServerFile(String filename, String client_ip_addr, String client_port) {
     this.client_ip_addr = client_ip_addr;
     this.client_port = client_port;
     this.filename = filename;
-    this.id = IDGenerator.getUniqueID(client_ip_addr, filename);
+    this.id = IDGenerator.issueUniqueID();
   }
 
   public String getId() {
@@ -42,8 +42,8 @@ public class File {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof File) {
-      File of = (File) obj;
+    if (obj instanceof ServerFile) {
+      ServerFile of = (ServerFile) obj;
 
       if (of.getId().equals(this.getId())) {
         return true;

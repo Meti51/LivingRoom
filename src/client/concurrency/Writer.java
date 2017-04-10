@@ -1,5 +1,7 @@
 package client.concurrency;
 
+import enums.Functions;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -72,15 +74,52 @@ public class Writer extends Thread {
      * @return formatted command string
      */
     private String constTransmission (String raw) {
-        String rVal = raw.trim().toUpperCase();
+        String[] sp = raw.split(",");
+        String rVal = sp[0].trim().toUpperCase();
 
         switch (rVal) {
 
-            case "CLIST":
+            case Functions.CLIST:
                 rVal = "<CLIST>";
                 break;
 
-            case "DISCONNECT":
+            case Functions.FLIST:
+                rVal = "<" + Functions.FLIST + ">";
+                System.out.println(rVal);
+                break;
+
+            case Functions.FPUT:
+                /*
+                user only enters command and file name.
+                socket info is determined by client app.
+                */
+                if (sp.length == 4) {
+                    rVal = "<" + Functions.FPUT + "," +
+                                sp[1].trim() + "," +
+                                sp[2].trim() + "," +
+                                sp[3].trim() + "," + ">";
+                } else {
+                    /*
+                     relieve the user of reponsibility
+                     to find out what its ip address and port
+                     number is. user will only send file name.
+                     since server is aware of users public ip address
+                     and port number, it can fill the info when request
+                     is received.
+                     */
+                    rVal = "<" + Functions.FPUT + "," +
+                            sp[1].trim() + "," +
+                                    "%," +
+                                    "%," + ">";
+                }
+                System.out.println(rVal);
+                break;
+
+            case Functions.FGET:
+                rVal = "<" + Functions.FLIST + ">";
+                break;
+
+            case Functions.DISCONNECT:
                 rVal = "<DISCONNECT>";
                 break;
 

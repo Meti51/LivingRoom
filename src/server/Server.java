@@ -3,7 +3,7 @@ package server;
 import server.client.Client;
 import server.concurrency.Dispatcher;
 import server.concurrency.Worker;
-import server.file.File;
+import server.server_file.ServerFile;
 import server.request.Request;
 
 import java.io.*;
@@ -28,8 +28,9 @@ public class Server {
     /* Active clients */
     /* Hold requests here */
     private Queue<Request> serviceBuffer = new ConcurrentLinkedQueue<>();
-    /* list of file ids and details */
-    private HashMap<String, File> fileList;
+    /* list of server_file ids and details */
+    /* server_file ids as keys */
+    private HashMap<String, ServerFile> fileList;
     /* Logged in  Clients */
     private Set<Client> activeList;
     /* Registered clients */
@@ -122,7 +123,7 @@ public class Server {
     }
 
     /**
-     * Load registered clients from file.
+     * Load registered clients from server_file.
      *
      * @param filePath -
      */
@@ -137,7 +138,8 @@ public class Server {
             String[] client;
             while ((line = reader.readLine()) != null) {
                 client = line.split(",");
-                registered.add(new Client(client[0], client[1]));
+                /* white space not allowed in password and username */
+                registered.add(new Client(client[0].trim(), client[1].trim()));
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -153,7 +155,7 @@ public class Server {
     }
 
     /**
-     * Writes registered client list to file
+     * Writes registered client list to server_file
      * on server termination.
      *
      * @param filePath -
