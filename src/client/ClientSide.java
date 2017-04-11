@@ -29,7 +29,8 @@ public class ClientSide {
             client = new Socket(ip, port);
             client.setKeepAlive(true);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+            System.exit(0);
         }
 
         // write outStream the connection

@@ -37,7 +37,7 @@ public class Worker extends Thread {
      * @param fileList list of files
      */
     public Worker (String name, Queue buffer, Set<Client> activeList,
-                   Set<Client> registered, HashMap fileList) {
+        Set<Client> registered, HashMap fileList) {
         super(name);
         this.serviceBuffer = buffer;
         this.activeList = activeList;
@@ -172,10 +172,10 @@ public class Worker extends Thread {
             if (client != null) {
                 if (client.getPassword().equals(password)) {
                     if (!activeList.contains(client)) {
-                    /* add client to active list */
+                        /* add client to active list */
                         client.setConnection(socket);
                         activeList.add(client);
-                    /* Sent response */
+                        /* Sent response */
                         out.println(ErrorMessages.SUCCESS);
                     } else {
                         /* already logged in */
@@ -205,10 +205,10 @@ public class Worker extends Thread {
     private synchronized void message(Command message) throws IOException {
         // broad cast message to all online clients
         PrintWriter broadCast;
-        System.out.println("sending message");
+
         for (Client client: activeList) {
             broadCast = new PrintWriter(client.getConnection().getOutputStream(),
-                    true);
+                true);
             broadCast.println(message.getPayload());
         }
     }
@@ -221,7 +221,7 @@ public class Worker extends Thread {
     private synchronized void clist(Socket client) throws IOException {
         // broad cast message to all online clients
         PrintWriter sendList = new PrintWriter(client.getOutputStream(),
-                true);
+            true);
 
         sendList.println(activeList);
         sendList.println(ErrorMessages.SUCCESS);
@@ -234,13 +234,13 @@ public class Worker extends Thread {
      */
     private synchronized void flist(Socket client) throws IOException {
         PrintWriter sendList = new PrintWriter(client.getOutputStream(),
-                true);
+            true);
 
-        sendList.println("-------------------- files --------------------------");
+        sendList.println("--------------------------- Files ---------------------------------");
         for (Map.Entry<String, ServerFile> entry: fileList.entrySet()) {
             sendList.println(entry.getValue());
         }
-        sendList.println("--------------------- end ---------------------------");
+        sendList.println("---------------------------- End ----------------------------------");
         sendList.println(ErrorMessages.SUCCESS);
     }
 
@@ -252,7 +252,7 @@ public class Worker extends Thread {
      */
     private synchronized void fput(Socket client, String payload) throws IOException {
         PrintWriter sendList = new PrintWriter(client.getOutputStream(),
-                true);
+            true);
         String[] split = payload.split(",");
 
         if (split.length == 3) {
@@ -260,6 +260,7 @@ public class Worker extends Thread {
             /* if ip is unknown */
             if (split[1].trim().equals("%")) {
                 split[1] = String.valueOf(client.getInetAddress());
+                split[1] = split[1].replace("/", "");
             }
 
             /* if port is unknown */
@@ -281,8 +282,19 @@ public class Worker extends Thread {
      *
      * @param payload contains file_ID
      */
-    private synchronized void fget(Socket client, String payload) {
+    private synchronized void fget(Socket client, String payload) throws IOException {
+        PrintWriter sendList = new PrintWriter(client.getOutputStream(),
+            true);
 
+        ServerFile file = fileList.get(payload);
+
+        if (file != null) {
+            sendList.println(file.getFilename() + "," +
+                file.getClient_ip_addr() + "," +
+                file.getClient_port());
+        } else {
+            sendList.println(ErrorMessages.INVALIDFILEID);
+        }
     }
 
     /**

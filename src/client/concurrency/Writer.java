@@ -54,7 +54,7 @@ public class Writer extends Thread {
              * since it blocks and wait for I/O
              */
             try {
-                Thread.sleep(1000);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
 //                System.out.println(e.getMessage());
                 break;
@@ -85,7 +85,6 @@ public class Writer extends Thread {
 
             case Functions.FLIST:
                 rVal = "<" + Functions.FLIST + ">";
-                System.out.println(rVal);
                 break;
 
             case Functions.FPUT:
@@ -98,7 +97,10 @@ public class Writer extends Thread {
                                 sp[1].trim() + "," +
                                 sp[2].trim() + "," +
                                 sp[3].trim() + "," + ">";
-                } else {
+                }
+
+                /* minimum length of 2 */
+                if (sp.length == 2) {
                     /*
                      relieve the user of reponsibility
                      to find out what its ip address and port
@@ -112,11 +114,13 @@ public class Writer extends Thread {
                                     "%," +
                                     "%," + ">";
                 }
-                System.out.println(rVal);
                 break;
 
             case Functions.FGET:
-                rVal = "<" + Functions.FLIST + ">";
+                if (sp.length == 2) {
+                    rVal = "<" + Functions.FGET + "," + sp[1].trim() + ">";
+                } else
+                    rVal = "<" + Functions.FGET + ">";
                 break;
 
             case Functions.DISCONNECT:

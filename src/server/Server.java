@@ -3,6 +3,7 @@ package server;
 import server.client.Client;
 import server.concurrency.Dispatcher;
 import server.concurrency.Worker;
+import server.controller.ServerController;
 import server.server_file.ServerFile;
 import server.request.Request;
 
@@ -37,6 +38,7 @@ public class Server {
     private Set<Client> registered;
 
     private ServerSocket server = null;
+    private Thread controller = null;
     private Thread[] dispatchers = null;
     private Thread[] workers = null;
     private String filePath;
@@ -60,63 +62,43 @@ public class Server {
     /**
      * Initialize server
      */
-    void init() {
+    public void init() {
         loadRegistered(filePath);
         createThreadpool(howManyThreads);
-    }
-
-    /**
-     * Block main process from terminating before threads
-     */
-    void joinThreads() {
-        // Join worker threads
-        for (Thread worker: workers) {
-            try {
-                worker.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // Join dispatcher threads
-        for (Thread dispatcher: dispatchers) {
-            try {
-                dispatcher.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        joinThreads();
     }
 
     /**
      * Terminate Server
      * waits until all threads has finished.
      */
-    void preterminationCleanup() {
-
+    public void preterminationCleanup() {
         try {
-            server.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        } finally {
-            try {
-                /* Terminate threads */
-                for (Thread worker : workers) {
-                    /* interrupt and wait */
-                    worker.interrupt();
-                    worker.join();
-                }
-
-                for (Thread dispatcher: dispatchers) {
-                    /* interrupt and wait */
-                    dispatcher.interrupt();
-                    dispatcher.join();
-                }
-
-            } catch (InterruptedException ex) {
-                //
+            /* Terminate threads */
+            for (Thread worker : workers) {
+                /* interrupt and wait */
+                worker.interrupt();
+                worker.join();
             }
 
+            try {
+                server.close();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+
+            for (Thread dispatcher: dispatchers) {
+                /* interrupt and wait */
+                dispatcher.interrupt();
+                dispatcher.join();
+            }
+
+            /* stop controller */
+            controller.interrupt();
+
+        } catch (InterruptedException ex) {
+            //
+        } finally {
             /* update registered list */
             writeRegistered(filePath);
         }
@@ -203,6 +185,12 @@ public class Server {
      * @param howmany - how many threads to create
      */
     private void createThreadpool(int howmany) {
+
+        /* Controller thread */
+        controller =
+            new ServerController("Controller", this);
+        controller.start();
+
         workers = new Thread[howmany];
         for (int i = 0; i < howmany; i++) {
             workers[i] = new Worker("Worker Thread #" + i, serviceBuffer,
@@ -215,6 +203,29 @@ public class Server {
             dispatchers[i] = new Dispatcher("Dispatcher Thread #" + i, server,
                 serviceBuffer);
             dispatchers[i].start();
+        }
+    }
+
+    /**
+     * Block main process from terminating before threads
+     */
+    private void joinThreads() {
+        // Join worker threads
+        for (Thread worker: workers) {
+            try {
+                worker.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Join dispatcher threads
+        for (Thread dispatcher: dispatchers) {
+            try {
+                dispatcher.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

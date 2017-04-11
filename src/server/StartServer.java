@@ -12,7 +12,6 @@ public class StartServer {
         System.out.println("Server starting ...");
         Server server = new Server(args[0], 4444, 1);
         server.init();
-        server.joinThreads();
 
 //        try {
 //            Thread.sleep(1000);
@@ -20,7 +19,6 @@ public class StartServer {
 //            e.printStackTrace();
 //        }
 
-        server.preterminationCleanup();
         System.out.println("Server Terminated");
     }
 

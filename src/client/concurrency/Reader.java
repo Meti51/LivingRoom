@@ -53,7 +53,7 @@ public class Reader extends Thread {
 
             // Don't stress the CPU
             try {
-                Thread.sleep(500);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
 //                System.out.println(e.getMessage());
                 break;
