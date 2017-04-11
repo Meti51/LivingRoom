@@ -28,10 +28,10 @@ public class ServerController extends Thread {
     while (!Thread.interrupted()) {
       String command = listen.nextLine();
 
-      switch (command) {
+      switch (command.toUpperCase()) {
 
         case ControlCmds.ECHO:
-          System.out.println("echoo echooo echooo");
+          System.out.println("echoo");
           break;
 
         case ControlCmds.EXIT:

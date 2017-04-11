@@ -43,11 +43,11 @@ public class Dispatcher extends Thread {
         Dispatch thread will only block for
         5 seconds to make this thread interruptable.
         */
-        try {
-            server.setSoTimeout(5000);
-        } catch (SocketException e) {
-            //
-        }
+//        try {
+//            server.setSoTimeout(5000);
+//        } catch (SocketException e) {
+//            //
+//        }
 
         while(!Thread.interrupted()) {
             /* Accept connection */
@@ -57,7 +57,6 @@ public class Dispatcher extends Thread {
                 System.out.println("Dispatchet Accept: " + e.getMessage());
             }
 
-            if (client != null) {
                 System.out.println(getName() + " connected to " + client.toString());
 
                 try {
@@ -117,7 +116,6 @@ public class Dispatcher extends Thread {
                     queue.offer(new Request(new Command("disconnect"), client));
                 }
             }
-        }
 
         System.out.println(getName() + " Stopped");
     }

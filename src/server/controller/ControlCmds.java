@@ -8,5 +8,7 @@ package server.controller;
  */
 public class ControlCmds {
   public static final String EXIT = "EXIT";
+  /* remove client from registered list */
+  public static final String RM = "RM";
   public static final String ECHO = "ECHO";
 }

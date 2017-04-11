@@ -7,5 +7,5 @@ package enums;
  * @author Natnael Seifu [seifu003]
  */
 public class Limits {
-  public static final int CLIENTTHREADLIMIT = 2;
+  public static final int CLIENTTHREADLIMIT = 10;
 }
