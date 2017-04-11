@@ -1,5 +1,6 @@
 package client;
 
+import client.concurrency.FileSender;
 import client.concurrency.Reader;
 import client.concurrency.Writer;
 import enums.ErrorMessages;
@@ -65,9 +66,11 @@ public class ClientSide {
         /* Names Threads after the client user name */
         Thread reader = new Reader(userName, client);
         Thread writer = new Writer(userName, client);
+        Thread fileSender = new FileSender(userName, 3333);
 
         reader.start();
         writer.start();
+        fileSender.start();
 
         try {
             reader.join();
