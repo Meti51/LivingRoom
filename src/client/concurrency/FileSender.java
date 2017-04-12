@@ -3,19 +3,14 @@ package client.concurrency;
 import static enums.Limits.MAXFILESIZE;
 import static enums.Limits.READBUFSIZE;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
  * Listens to other client request for file.
+ * <p>
+ * persists until client is terminated
  *
  * Created on 4/11/2017.
  * @author Natnael Seifu [seifu003]
@@ -24,7 +19,6 @@ public class FileSender extends Thread {
 
     private ServerSocket listener;
     private int port;
-//    private String baseDirectory;
 
     public FileSender (String name, int port) {
         super(name);
@@ -33,7 +27,6 @@ public class FileSender extends Thread {
 
     @Override
     public void run() {
-        System.out.println(getName() + " File Sender started.");
         BufferedReader in = null;
         String filePath = null;
 
@@ -94,7 +87,7 @@ public class FileSender extends Thread {
                         if (out != null) {
                             int byteCount;
                             try {
-                                /* read 8192 bytes at a time */
+                                /* read READBUFSIZE bytes at a time */
                                 while ((byteCount = fileInput.read(buffer)) > 0) {
                                     /* send bytes to peer */
                                     out.write(buffer, 0, byteCount);
@@ -104,6 +97,9 @@ public class FileSender extends Thread {
                             } finally {
                                 try {
                                     fileInput.close();
+                                    /* Done sending file */
+                                    out.close();
+                                    peer.close();
                                 } catch (IOException e) {
                                     System.out.println(e.getMessage());
                                 }
@@ -115,6 +111,8 @@ public class FileSender extends Thread {
                 }
             }
         }
+
+        System.out.println(getName() + " File Sender Terminated");
     }
 
     /**

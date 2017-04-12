@@ -5,7 +5,6 @@ import static client.constants.ClientConsts.PEERPORT;
 import client.concurrency.FileSender;
 import client.concurrency.Reader;
 import client.concurrency.Writer;
-import client.constants.ClientConsts;
 import enums.ErrorMessages;
 
 import java.io.BufferedReader;
@@ -57,7 +56,7 @@ public class ClientSide {
     /**
      *
      */
-    public void init() {
+    void init() {
 
         String userName = menu();
 
@@ -144,7 +143,7 @@ public class ClientSide {
 
         String userName;
         String password;
-        String verify = "";
+        String verify;
 
         Scanner scan = new Scanner(System.in);
 
