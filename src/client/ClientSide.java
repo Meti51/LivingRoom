@@ -1,8 +1,11 @@
 package client;
 
+import static client.constants.ClientConsts.PEERPORT;
+
 import client.concurrency.FileSender;
 import client.concurrency.Reader;
 import client.concurrency.Writer;
+import client.constants.ClientConsts;
 import enums.ErrorMessages;
 
 import java.io.BufferedReader;
@@ -66,7 +69,7 @@ public class ClientSide {
         /* Names Threads after the client user name */
         Thread reader = new Reader(userName, client);
         Thread writer = new Writer(userName, client);
-        Thread fileSender = new FileSender(userName, 3333);
+        Thread fileSender = new FileSender(userName, PEERPORT);
 
         reader.start();
         writer.start();
@@ -74,9 +77,15 @@ public class ClientSide {
 
         try {
             reader.join();
-            /* if reader is interrupted stop writer thread as well */
+            /*
+            if reader is interrupted stop writer and
+            sender thread as well.
+            */
             writer.interrupt();
             writer.join();
+
+            fileSender.interrupt();
+            ((FileSender) fileSender).closeSocket();
         } catch (InterruptedException e) {
             System.out.println(e.getMessage());
         }

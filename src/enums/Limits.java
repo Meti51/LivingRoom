@@ -8,4 +8,6 @@ package enums;
  */
 public class Limits {
   public static final int CLIENTTHREADLIMIT = 10;
+  public static final long MAXFILESIZE = Integer.MAX_VALUE;
+  public static final int READBUFSIZE = 8192;
 }

@@ -1,7 +1,6 @@
 package server.client;
 
 import java.net.Socket;
-import java.util.Objects;
 
 /**
  * Client info

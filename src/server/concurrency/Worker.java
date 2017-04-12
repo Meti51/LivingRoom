@@ -1,6 +1,8 @@
 package server.concurrency;
 
 
+import static enums.Functions.*;
+
 import enums.ErrorMessages;
 import enums.Functions;
 
@@ -63,35 +65,35 @@ public class Worker extends Thread {
 
                     switch (cmd.getFunction()) {
 
-                        case Functions.REGISTER:
+                        case REGISTER:
                             register(clientSocket, cmd.getPayload());
                             break;
 
-                        case Functions.LOGIN:
+                        case LOGIN:
                             login(clientSocket, cmd.getPayload());
                             break;
 
-                        case Functions.MSG:
+                        case MSG:
                             message(cmd);
                             break;
 
-                        case Functions.CLIST:
+                        case CLIST:
                             clist(clientSocket);
                             break;
 
-                        case Functions.FLIST:
+                        case FLIST:
                             flist(clientSocket);
                             break;
 
-                        case Functions.FPUT:
+                        case FPUT:
                             fput(clientSocket, cmd.getPayload());
                             break;
 
-                        case Functions.FGET:
+                        case FGET:
                             fget(clientSocket, cmd.getPayload());
                             break;
 
-                        case Functions.DISCONNECT:
+                        case DISCONNECT:
                             disconnect(clientSocket);
                             break;
 
@@ -263,11 +265,6 @@ public class Worker extends Thread {
                 split[1] = split[1].replace("/", "");
             }
 
-            /* if port is unknown */
-            if (split[2].trim().equals("%")) {
-                split[2] = String.valueOf(client.getPort());
-            }
-
             ServerFile file = new ServerFile(split[0].trim(), split[1].trim(), split[2].trim());
             fileList.put(file.getId(), file);
 
@@ -289,7 +286,8 @@ public class Worker extends Thread {
         ServerFile file = fileList.get(payload);
 
         if (file != null) {
-            sendList.println(file.getFilename() + "," +
+            sendList.println(FGET + "," +
+                file.getFilename() + "," +
                 file.getClient_ip_addr() + "," +
                 file.getClient_port());
         } else {

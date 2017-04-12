@@ -1,5 +1,7 @@
 package client.concurrency;
 
+import static client.constants.ClientConsts.PEERPORT;
+
 import enums.Functions;
 
 import java.io.IOException;
@@ -16,12 +18,10 @@ import java.util.Scanner;
  */
 public class Writer extends Thread {
 
-    private String name = null;
     private Socket socket = null;
 
     public Writer (String name, Socket socket) {
         super(name);
-        this.name = name;
         this.socket = socket;
     }
 
@@ -91,6 +91,7 @@ public class Writer extends Thread {
                 /*
                 user only enters command and file name.
                 socket info is determined by client app.
+                <FPUT,filename,ip_addr,port>
                 */
                 if (sp.length == 4) {
                     rVal = "<" + Functions.FPUT + "," +
@@ -112,15 +113,17 @@ public class Writer extends Thread {
                     rVal = "<" + Functions.FPUT + "," +
                             sp[1].trim() + "," +
                                     "%," +
-                                    "%," + ">";
+                            PEERPORT + "," + ">";
                 }
                 break;
 
             case Functions.FGET:
                 if (sp.length == 2) {
                     rVal = "<" + Functions.FGET + "," + sp[1].trim() + ">";
-                } else
+                } else {
+                    /* server throw invalidformat */
                     rVal = "<" + Functions.FGET + ">";
+                }
                 break;
 
             case Functions.DISCONNECT:

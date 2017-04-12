@@ -1,5 +1,7 @@
 package client.concurrency;
 
+import static enums.Functions.FGET;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -15,18 +17,15 @@ import java.net.Socket;
  */
 public class Reader extends Thread {
 
-    private String name = null;
     private Socket socket = null;
 
     public Reader(String name, Socket inStream) {
         super(name);
-        this.name = name;
         this.socket = inStream;
     }
 
     @Override
     public void run() {
-//        System.out.println(name + " Started");
         BufferedReader inStream;
 
         try {
@@ -41,7 +40,7 @@ public class Reader extends Thread {
             try {
                 String msg = inStream.readLine();
                 if (msg != null) {
-                    System.out.println(msg);
+                    transHandler(msg);
                 } else {
                     /* Underlying socket closed from server side*/
                     break;
@@ -61,5 +60,31 @@ public class Reader extends Thread {
         }
 
         System.out.println(getName() + "'s Reader thread has terminated");
+    }
+
+    /**
+     * if the client has requested for file, this
+     * procedure will create the FileReceiver thread
+     * and transfer control.
+     *
+     * @param transmission incoming message from server
+     * @see FileReceiver
+     */
+    private void transHandler (String transmission) {
+
+        String[] theFist = transmission.split(",");
+
+        switch (theFist[0]) {
+
+            case FGET:
+                new FileReceiver(getName(), theFist[1],
+                    theFist[2], theFist[3]).start();
+                break;
+
+            default:
+                System.out.println(transmission);
+                break;
+
+        }
     }
 }

@@ -1,6 +1,5 @@
 package server.command;
 
-import java.util.Arrays;
 
 /**
  * Parse Raw commands
@@ -12,11 +11,8 @@ public class Command {
 
     private String function;
     private String payload;
-    private String raw;
 
     public Command(String raw) {
-        this.raw = raw;
-
         String[] p = parse(raw);
         this.function = p[0];
         this.payload = p[1];

@@ -6,7 +6,10 @@ import java.util.Scanner;
 import server.Server;
 
 /**
+ * Server Controller thread listens to command
+ * from server.
  *
+ * limited functionality.
  *
  * Created on 4/10/2017.
  * @author Natnael Seifu [seifu003]
@@ -35,10 +38,10 @@ public class ServerController extends Thread {
           break;
 
         case ControlCmds.EXIT:
-        /*
-        Server will exit it self after
-        this method is invoked.
-        */
+          /*
+          Server will exit it self after
+          this method is invoked.
+          */
           server.preterminationCleanup();
           break;
 
