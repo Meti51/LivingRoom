@@ -43,7 +43,7 @@ public class FileSender extends Thread {
                 peer = listener.accept();
             } catch (IOException e) {
                 System.out.println(getName() + " " + e.getMessage());
-                return;
+                break;
             }
 
             try {
@@ -88,10 +88,12 @@ public class FileSender extends Thread {
                             int byteCount;
                             try {
                                 /* read READBUFSIZE bytes at a time */
+                                System.out.println("Sending ...");
                                 while ((byteCount = fileInput.read(buffer)) > 0) {
                                     /* send bytes to peer */
                                     out.write(buffer, 0, byteCount);
                                 }
+                                System.out.println("Done Sending");
                             } catch (IOException e) {
                                 System.out.println(getName() + " " + e.getMessage());
                             } finally {

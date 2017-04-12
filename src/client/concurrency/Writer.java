@@ -103,9 +103,8 @@ public class Writer extends Thread {
                 /* minimum length of 2 */
                 if (sp.length == 2) {
                     /*
-                     relieve the user of reponsibility
-                     to find out what its ip address and port
-                     number is. user will only send file name.
+                     relieve the user of reponsibility to find out
+                     the ip address. user will only send file name.
                      since server is aware of users public ip address
                      and port number, it can fill the info when request
                      is received.

@@ -2,7 +2,6 @@ package server.concurrency;
 
 import static enums.Limits.CLIENTTHREADLIMIT;
 
-import java.net.SocketException;
 import server.Server;
 import server.command.Command;
 import server.request.Request;
@@ -50,10 +49,12 @@ public class Dispatcher extends Thread {
 
             System.out.println(getName() + " connected to " + client);
 
-            try {
-                in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            } catch (IOException e) {
-                System.out.println("Dispatcher reader: " + e.getMessage());
+            if (client != null) {
+                try {
+                    in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                } catch (IOException e) {
+                    System.out.println("Dispatcher reader: " + e.getMessage());
+                }
             }
 
             /*
@@ -71,23 +72,24 @@ public class Dispatcher extends Thread {
                                 String req = finalIn.readLine();
 
                                 if (validate(req)) {
-                                /*
-                                Add request to buffer and will be
-                                serviced by worker threads.
-                                */
+                                    /*
+                                    Add request to buffer and will be
+                                    serviced by worker threads.
+                                    */
                                     queue.offer(new Request(new Command(req), finalClient));
                                 }
-
                             } catch (IOException e) {
                                 /* client ended connection */
                                 System.out.println("Client: " + e.getMessage());
-                                try {
-                                    finalClient.close();
-                                    break;
-                                } catch (IOException e1) {
-                                    System.out.println(e1.getMessage());
+                                if (finalClient != null) {
+                                    try {
+                                        finalClient.close();
+                                        break;
+                                    } catch (IOException e1) {
+                                        System.out.println(e1.getMessage());
+                                    }
                                 }
-                                return;
+                                break;
                             }
 
                             // Don't stress the CPU
@@ -97,6 +99,7 @@ public class Dispatcher extends Thread {
                                 break;
                             }
                         }
+                        System.out.println("Persistent Client thread terminated");
                         Server.clientThreadCounter(-1);
                         }
                     }.start();
@@ -119,13 +122,6 @@ public class Dispatcher extends Thread {
      * @return -
      */
     private boolean validate(String command) {
-        if (command == null) {
-            return false;
-        }
-        if (command.isEmpty()) {
-            return false;
-        }
-
-        return true;
+        return command != null && command.isEmpty();
     }
 }
