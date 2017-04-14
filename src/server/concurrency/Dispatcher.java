@@ -67,6 +67,7 @@ public class Dispatcher extends Thread {
                 new Thread() {
                     public void run() {
                         /* Keep connection persistent for client */
+                        System.out.println("Client Thread started");
                         while (finalIn != null) {
                             try {
                                 String req = finalIn.readLine();
@@ -122,6 +123,6 @@ public class Dispatcher extends Thread {
      * @return -
      */
     private boolean validate(String command) {
-        return command != null && command.isEmpty();
+        return command != null && !command.isEmpty();
     }
 }
