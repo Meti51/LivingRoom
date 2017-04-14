@@ -4,7 +4,12 @@ import static client.constants.ClientConsts.PEERPORT;
 
 import enums.Functions;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
@@ -68,7 +73,7 @@ public class Writer extends Thread {
      * formats raw string to server usable
      * command string.
      * <p>
-     * Note: this is considered as raw by server.
+     * Note: this is considered as raw input by server.
      *
      * @param raw user input
      * @return formatted command string
@@ -93,15 +98,12 @@ public class Writer extends Thread {
                 socket info is determined by client app.
                 <FPUT,filename,ip_addr,port>
                 */
-                if (sp.length == 4) {
+                if (sp.length == 4 && fileExists(sp[1].trim())) {
                     rVal = "<" + Functions.FPUT + "," +
                                 sp[1].trim() + "," +
                                 sp[2].trim() + "," +
                                 sp[3].trim() + "," + ">";
-                }
-
-                /* minimum length of 2 */
-                if (sp.length == 2) {
+                } else if (sp.length == 2  && fileExists(sp[1].trim())) {
                     /*
                      relieve the user of reponsibility to find out
                      the ip address. user will only send file name.
@@ -136,5 +138,19 @@ public class Writer extends Thread {
         }
 
         return rVal;
+    }
+
+    private boolean fileExists(String fileName) {
+        File file = new File(fileName);
+        BufferedReader check = null;
+
+        try {
+            new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+        } catch (FileNotFoundException e) {
+            System.out.println(fileName + " " + e.getMessage());
+            return false;
+        }
+
+        return true;
     }
 }

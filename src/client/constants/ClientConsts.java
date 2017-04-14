@@ -10,6 +10,6 @@ public class ClientConsts {
 
   public static final int PEERPORT = 3333;
   /* Root directory of client */
-  public static final String ROOT = "";
+  public static final String ROOT = "../";
 
 }
