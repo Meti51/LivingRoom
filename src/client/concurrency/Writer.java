@@ -147,7 +147,7 @@ public class Writer extends Thread {
         try {
             new BufferedReader(new InputStreamReader(new FileInputStream(file)));
         } catch (FileNotFoundException e) {
-            System.out.println(fileName + " " + e.getMessage());
+            System.out.println(e.getMessage());
             return false;
         }
 

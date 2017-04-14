@@ -88,7 +88,7 @@ public class FileSender extends Thread {
                             int byteCount;
                             try {
                                 /* read READBUFSIZE bytes at a time */
-                                System.out.println("Sending ...");
+                                System.out.println("Sending File [" + filePath + "] ...");
                                 while ((byteCount = fileInput.read(buffer)) > 0) {
                                     /* send bytes to peer */
                                     out.write(buffer, 0, byteCount);

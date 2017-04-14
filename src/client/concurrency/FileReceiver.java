@@ -84,7 +84,7 @@ public class FileReceiver extends Thread {
       int readCount;
       try {
         /* read from socket */
-        System.out.println("Receiving file ...");
+        System.out.println("Receiving File [" + filePath + "]...");
         while ((readCount = peerInput.read(buffer)) > 0) {
           /* write to file */
           writeToFile.write(buffer, 0, readCount);
