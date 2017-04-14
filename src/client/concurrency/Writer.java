@@ -1,6 +1,6 @@
 package client.concurrency;
 
-import static client.constants.ClientConsts.PEERPORT;
+import static client.client_port.ClientPort.PEERPORT;
 
 import enums.Functions;
 

@@ -1,4 +1,4 @@
-package server;
+package server.server_main;
 
 import server.client.Client;
 import server.concurrency.Dispatcher;

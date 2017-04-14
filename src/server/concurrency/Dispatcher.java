@@ -2,7 +2,7 @@ package server.concurrency;
 
 import static enums.Limits.CLIENTTHREADLIMIT;
 
-import server.Server;
+import server.server_main.Server;
 import server.command.Command;
 import server.request.Request;
 

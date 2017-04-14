@@ -1,4 +1,7 @@
-package server;
+package server.server_main;
+
+import static server.server_const.ServerConstants.THREADCOUNT;
+import static server.server_const.ServerConstants.SERVERPORT;
 
 /**
  * Helper class to start Server
@@ -10,7 +13,7 @@ public class StartServer {
 
     public static void main(String[] args) {
         System.out.println("Server starting ...");
-        Server server = new Server(args[0], 4444, 1);
+        Server server = new Server(args[0], SERVERPORT, THREADCOUNT);
         server.init();
 
 //        try {

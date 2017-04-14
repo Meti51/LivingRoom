@@ -1,9 +1,7 @@
 package server.controller;
 
-import static server.controller.ControlCmds.EXIT;
-
 import java.util.Scanner;
-import server.Server;
+import server.server_main.Server;
 
 /**
  * Server Controller thread listens to command

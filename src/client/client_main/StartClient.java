@@ -1,4 +1,4 @@
-package client;
+package client.client_main;
 
 /**
  * Helper class to start Client apps

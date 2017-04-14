@@ -1,10 +1,11 @@
-package client;
+package client.client_main;
 
-import static client.constants.ClientConsts.PEERPORT;
+import static client.client_port.ClientPort.PEERPORT;
 
 import client.concurrency.FileSender;
 import client.concurrency.Reader;
 import client.concurrency.Writer;
+import client.client_port.ClientPort;
 import enums.ErrorMessages;
 
 import java.io.BufferedReader;
@@ -13,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -70,6 +70,7 @@ public class ClientSide {
         /* Names Threads after the client user name */
         Thread reader = new Reader(userName, client);
         Thread writer = new Writer(userName, client);
+        ClientPort.setPort();
         Thread fileSender = new FileSender(userName, PEERPORT);
 
         reader.start();
@@ -144,7 +145,7 @@ public class ClientSide {
     private String loginSequence() {
 
         String userName;
-        char[] password;
+        String password;
         String verify;
 
         Scanner scan = new Scanner(System.in);
@@ -153,10 +154,13 @@ public class ClientSide {
         System.out.println("/***** Login *****/");
         Console console = System.console();
         userName = console.readLine("User Name: ");
-        password = console.readPassword("Password: ");
+        char[] p = console.readPassword("Password: ");
+
+        password = String.valueOf(p);
 
         /* send to server for verification */
-        outStream.println("Login," + userName + "," + Arrays.toString(password));
+        System.out.println("Login," + userName + "," + password);
+        outStream.println("Login," + userName + "," + password);
 
         try {
             verify = inStream.readLine();
