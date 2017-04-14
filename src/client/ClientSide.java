@@ -8,10 +8,12 @@ import client.concurrency.Writer;
 import enums.ErrorMessages;
 
 import java.io.BufferedReader;
+import java.io.Console;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -142,20 +144,19 @@ public class ClientSide {
     private String loginSequence() {
 
         String userName;
-        String password;
+        char[] password;
         String verify;
 
         Scanner scan = new Scanner(System.in);
 
         /* ask for user name and password */
         System.out.println("/***** Login *****/");
-        System.out.print("User Name: ");
-        userName = scan.nextLine();
-        System.out.print("Password: ");
-        password = scan.nextLine();
+        Console console = System.console();
+        userName = console.readLine("User Name: ");
+        password = console.readPassword("Password: ");
 
         /* send to server for verification */
-        outStream.println("Login," + userName + "," + password);
+        outStream.println("Login," + userName + "," + Arrays.toString(password));
 
         try {
             verify = inStream.readLine();

@@ -1,5 +1,11 @@
-Multi Threaded Server and Chatroom
-----------------------------------
+LivingRoom
+----------
+
+what is it?
+-----------
+
+Living room is Server and client combo personal chatroom. Users can start their own server that
+will enable their "Guests" to join them in conversation in their virtual "Living Room".
 
 How to start Server
 --------------------
