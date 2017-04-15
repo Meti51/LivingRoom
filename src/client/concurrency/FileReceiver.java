@@ -97,6 +97,7 @@ public class FileReceiver extends Thread {
           /* Release file resources */
           writeToFile.close();
           peer.close();
+          out.close();
         } catch (IOException e) {
           System.out.println(e.getMessage());
         }

@@ -159,7 +159,6 @@ public class ClientSide {
         password = String.valueOf(p);
 
         /* send to server for verification */
-        System.out.println("Login," + userName + "," + password);
         outStream.println("Login," + userName + "," + password);
 
         try {
