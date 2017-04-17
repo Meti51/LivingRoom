@@ -1,8 +1,5 @@
 package server.server_const;
 
-import java.io.IOException;
-import java.net.Socket;
-
 /**
  *
  * Created on 4/14/2017.
@@ -10,5 +7,4 @@ import java.net.Socket;
  */
 public class ServerConstants {
   public static int SERVERPORT = 4444;
-  public static int THREADCOUNT = 1;
 }

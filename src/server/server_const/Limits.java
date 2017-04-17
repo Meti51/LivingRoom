@@ -1,4 +1,4 @@
-package enums;
+package server.server_const;
 
 /**
  * Constraint placed on server.
@@ -7,7 +7,8 @@ package enums;
  * @author Natnael Seifu [seifu003]
  */
 public class Limits {
-  public static final int CLIENTTHREADLIMIT = 10;
+  public static final int CLIENTLIMIT = 10;
+  public static int THREADCOUNT = 2;
   public static final long MAXFILESIZE = Integer.MAX_VALUE;
   public static final int READBUFSIZE = 8192;
 }

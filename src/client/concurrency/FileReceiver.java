@@ -1,7 +1,7 @@
 package client.concurrency;
 
-import static client.constants.ClientConsts.ROOT;
-import static enums.Limits.READBUFSIZE;
+import static client.client_consts.ClientConstants.ROOT;
+import static server.server_const.Limits.READBUFSIZE;
 
 import java.io.*;
 import java.net.Socket;

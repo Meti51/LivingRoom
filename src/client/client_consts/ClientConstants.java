@@ -1,4 +1,4 @@
-package client.constants;
+package client.client_consts;
 
 /**
  *
@@ -6,7 +6,7 @@ package client.constants;
  * Created on 4/14/2017.
  * @author Natnael Seifu [seifu003]
  */
-public class ClientConsts {
+public class ClientConstants {
   /* Root directory of client */
   public static final String ROOT = "../";
 }

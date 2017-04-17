@@ -1,7 +1,7 @@
 package client.concurrency;
 
-import static enums.Limits.MAXFILESIZE;
-import static enums.Limits.READBUFSIZE;
+import static server.server_const.Limits.MAXFILESIZE;
+import static server.server_const.Limits.READBUFSIZE;
 
 import java.io.*;
 import java.net.ServerSocket;

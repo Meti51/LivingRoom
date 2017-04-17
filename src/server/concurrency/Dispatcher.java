@@ -1,6 +1,6 @@
 package server.concurrency;
 
-import static enums.Limits.CLIENTTHREADLIMIT;
+import static server.server_const.Limits.CLIENTLIMIT;
 
 import server.server_main.Server;
 import server.command.Command;
@@ -63,7 +63,7 @@ public class Dispatcher extends Thread {
              */
             Socket finalClient = client;
             BufferedReader finalIn = in;
-            if (Server.getClientThreadCounter() < CLIENTTHREADLIMIT) {
+            if (Server.getClientThreadCounter() < CLIENTLIMIT) {
                 new Thread() {
                     public void run() {
                         /* Keep connection persistent for client */
