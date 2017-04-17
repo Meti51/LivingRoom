@@ -4,7 +4,6 @@ package server.concurrency;
 import static enums.Functions.*;
 
 import enums.ErrorMessages;
-import enums.Functions;
 
 import java.util.*;
 
@@ -39,7 +38,7 @@ public class Worker extends Thread {
      * @param fileList list of files
      */
     public Worker (String name, Queue buffer, Set<Client> activeList,
-        Set<Client> registered, HashMap fileList) {
+        Set<Client> registered, HashMap<String, ServerFile> fileList) {
         super(name);
         this.serviceBuffer = buffer;
         this.activeList = activeList;

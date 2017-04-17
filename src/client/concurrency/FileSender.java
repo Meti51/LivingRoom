@@ -99,8 +99,6 @@ public class FileSender extends Thread {
                             } finally {
                                 try {
                                     fileInput.close();
-                                    fileInput = null;
-                                    System.gc();
                                     /* Done sending file */
                                     out.close();
                                     peer.close();
