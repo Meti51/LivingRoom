@@ -7,20 +7,35 @@ will enable their "Guests" to join them in conversation in their virtual "Living
 How to start Server
 --------------------
 
-1. Locate src directory and execute this command on command line: javac server/StartServer.java
-   This will compile the source code to executable
+    For Windows Users
+    -----------------
+    1. Locate batch file "LivingRoom/src/server/win_start_server.bat" to start server.
 
-2. Then run server using command: java server/StartServer ./filepath
-   i.e. file path of the registered clients list.
-        [This file has to match the format of Programming Assignment specifications].
+    For Linux Users
+    ----------------
+    1. Locate src directory and execute this command on command line: javac server/StartServer.java
+       This will compile the source code to executable
+
+    2. Then run server using command: java server/StartServer ./filepath
+       i.e. file path of the registered clients list.
+            [This file has to match the format of Programming Assignment specifications].
+
+    Note: Please start server first before starting client. client app will return server refused connection if it
+          cannot find active server.
 
 How to start Client
 --------------------
 
-1. Locate src directory and execute this command on command line: javac client/StartClient.java
-   This will compile the source code to executable
+    For Windows Users
+    -----------------
+    1. Locate batch file "LivingRoom/src/client/win_start_client.bat" and double click to start client app.
 
-2. Then run client app using command: java client/StartClient
+    For Linux Users
+    ----------------
+    1. Locate src directory and execute this command on command line: javac client/StartClient.java
+       This will compile the source code to executable
+
+    2. Then run client app using command: java client/StartClient
 
 
 Code File Structure and detail
