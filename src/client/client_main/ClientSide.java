@@ -148,15 +148,24 @@ public class ClientSide {
         String password;
         String verify;
 
-        Scanner scan = new Scanner(System.in);
-
         /* ask for user name and password */
         System.out.println("/***** Login *****/");
         Console console = System.console();
-        userName = console.readLine("User Name: ");
-        char[] p = console.readPassword("Password: ");
+        
+        if (console != null) {
+            userName = console.readLine("User Name: ");
+            char[] p = console.readPassword("Password: ");
 
-        password = String.valueOf(p);
+            password = String.valueOf(p);
+        } else {
+            System.out.println("No console Found. Switching secondary input service");
+            Scanner scan = new Scanner(System.in);
+            /* No Console found. Console hides password keys stokes */
+            System.out.print("User Name: ");
+            userName = scan.nextLine();
+            System.out.print("Password: ");
+            password = scan.nextLine();
+        }
 
         /* send to server for verification */
         outStream.println("Login," + userName + "," + password);

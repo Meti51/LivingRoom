@@ -8,7 +8,7 @@ package server.server_const;
  */
 public class Limits {
   public static final int CLIENTLIMIT = 10;
-  public static int THREADCOUNT = 2;
+  public static int THREADCOUNT = 1;
   public static final long MAXFILESIZE = Integer.MAX_VALUE;
   public static final int READBUFSIZE = 8192;
 }

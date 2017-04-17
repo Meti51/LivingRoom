@@ -123,6 +123,9 @@ Code File Structure and detail
                 ServerController.java: Listens for user input from server side and if commands are
                                        supported, implements them else throws unsupported command error
                                        message.
+                                       commands available:
+                                            echo: prints echoo - indicating server is responsive
+                                            exit: terminate server
 
             files
                 registered.txt: This file holds previously registered clients for when server
