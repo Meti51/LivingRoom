@@ -151,7 +151,7 @@ public class ClientSide {
         /* ask for user name and password */
         System.out.println("/***** Login *****/");
         Console console = System.console();
-        
+
         if (console != null) {
             userName = console.readLine("User Name: ");
             char[] p = console.readPassword("Password: ");

@@ -11,4 +11,5 @@ class ControlCmds {
   /* remove client from registered list */
 //  static final String RM = "RM";
   static final String ECHO = "ECHO";
+  static final String STATUS = "STATUS";
 }

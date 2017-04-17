@@ -125,6 +125,7 @@ Code File Structure and detail
                                        message.
                                        commands available:
                                             echo: prints echoo - indicating server is responsive
+                                            status: prints status of server
                                             exit: terminate server
 
             files

@@ -1,7 +1,16 @@
 package server.controller;
 
+import java.util.HashMap;
 import java.util.Scanner;
+import java.util.Set;
+
+import server.client.Client;
+import server.server_file.ServerFile;
 import server.server_main.Server;
+
+import static server.controller.ControlCmds.ECHO;
+import static server.controller.ControlCmds.EXIT;
+import static server.controller.ControlCmds.STATUS;
 
 /**
  * Server Controller thread listens to command
@@ -15,10 +24,17 @@ import server.server_main.Server;
 public class ServerController extends Thread {
 
   private Server server;
+  private HashMap<String, ServerFile> fileList;
+  private Set<Client> registered;
+  private Set<Client> active;
 
-  public ServerController (String name, Server server) {
+  public ServerController (String name, Server server, Set<Client> registered,
+                           Set<Client> active,  HashMap<String, ServerFile> fileList) {
     super(name);
     this.server = server;
+    this.registered = registered;
+    this.active = active;
+    this.fileList = fileList;
   }
 
   @Override
@@ -31,16 +47,24 @@ public class ServerController extends Thread {
 
       switch (command.toUpperCase()) {
 
-        case ControlCmds.ECHO:
+        case ECHO:
           System.out.println("echoo");
           break;
 
-        case ControlCmds.EXIT:
+        case STATUS:
+          System.out.println("--------------- Server Status -----------------");
+          System.out.println("---- " + registered.size() + " registered client");
+          System.out.println("---- " + active.size() + " Active clients");
+          System.out.println("---- " + fileList.size() + " Files on server");
+          break;
+
+        case EXIT:
           /*
           Server will exit it self after
           this method is invoked.
           */
-          server.preterminationCleanup();
+          if (active.size() == 0) server.preterminationCleanup();
+          else System.out.println("active clients still exist");
           break;
 
         default:

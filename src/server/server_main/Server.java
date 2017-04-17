@@ -188,7 +188,7 @@ public class Server {
 
         /* Controller thread */
         controller =
-            new ServerController("Controller", this);
+            new ServerController("Controller", this, registered, activeList, fileList);
         controller.start();
 
         workers = new Thread[howmany];
