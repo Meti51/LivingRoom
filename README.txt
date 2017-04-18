@@ -17,7 +17,7 @@ How to start Server
 
     For Windows Users
     -----------------
-    1. Locate batch file "LivingRoom/src/server/win_start_server.bat" to start server.
+    1. Locate batch file "LivingRoom/src/server/win_start_server.bat" and double click to start server.
 
     For Linux Users
     ----------------
