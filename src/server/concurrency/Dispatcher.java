@@ -47,6 +47,9 @@ public class Dispatcher extends Thread {
                 System.out.println("Dispatchet Accept: " + e.getMessage());
             }
 
+            /* Stop dispatcher if server is closed */
+            if (server.isClosed()) break;
+
             System.out.println(getName() + " connected to " + client);
 
             if (client != null) {
@@ -64,51 +67,59 @@ public class Dispatcher extends Thread {
             Socket finalClient = client;
             BufferedReader finalIn = in;
             if (Server.getClientThreadCounter() < CLIENTLIMIT) {
-                new Thread() {
-                    public void run() {
-                        /* Keep connection persistent for client */
-                        System.out.println("Client Thread started");
-                        while (finalIn != null) {
-                            try {
-                                String req = finalIn.readLine();
+                if (finalIn != null) {
+                    new Thread() {
+                        public void run() {
+                            /* Keep connection persistent for client */
+                            System.out.println("Client Thread started");
+                            while (true) {
+                                try {
+                                    String req = null;
+                                    if (finalIn.ready()) {
+                                        req = finalIn.readLine();
+                                    }
 
-                                if (validate(req)) {
+                                    if (validate(req)) {
                                     /*
                                     Add request to buffer and will be
                                     serviced by worker threads.
                                     */
-                                    queue.offer(new Request(new Command(req), finalClient));
-                                }
-                            } catch (IOException e) {
-                                /* client ended connection */
-                                System.out.println("Client: " + e.getMessage());
-                                if (finalClient != null) {
-                                    try {
-                                        finalClient.close();
-                                        break;
-                                    } catch (IOException e1) {
-                                        System.out.println(e1.getMessage());
+                                        queue.offer(new Request(new Command(req), finalClient));
                                     }
+                                } catch (IOException e) {
+                                /* client ended connection */
+                                    System.out.println("Client: " + e.getMessage());
+                                    break;
                                 }
-                                break;
-                            }
 
-                            // Don't stress the CPU
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                break;
+                                if (server.isClosed()) {
+                                    if (finalClient != null) {
+                                        try {
+                                            finalClient.close();
+                                        } catch (IOException e) {
+                                            System.out.println(e.getMessage());
+                                        }
+                                    }
+                                    break;
+                                }
+
+                                // Don't stress the CPU
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    break;
+                                }
                             }
-                        }
-                        System.out.println("Persistent Client thread terminated");
-                        Server.clientThreadCounter(-1);
+                            System.out.println("Persistent Client thread terminated");
+                            Server.clientThreadCounter(-1);
                         }
                     }.start();
-                /* synchronized thread clientThreadCounter increment */
-                Server.clientThreadCounter(1);
-            } else {
-                System.out.println("Persistent thread creation limit reached");
-                queue.offer(new Request(new Command("disconnect"), client));
+                    /* synchronized thread clientThreadCounter increment */
+                    Server.clientThreadCounter(1);
+                } else {
+                    System.out.println("Persistent thread creation limit reached");
+                    queue.offer(new Request(new Command("disconnect"), client));
+                }
             }
         }
 

@@ -65,13 +65,14 @@ public class ClientSide {
         if (userName == null) {
             return;
         }
-        System.out.println("Client App Started");
 
         /* Names Threads after the client user name */
         Thread reader = new Reader(userName, client);
         Thread writer = new Writer(userName, client);
+        /* Find available port */
         ClientPort.setPort();
         Thread fileSender = new FileSender(userName, PEERPORT);
+        System.out.println("--------------- Client App Started");
 
         reader.start();
         writer.start();

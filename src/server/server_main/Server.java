@@ -3,7 +3,6 @@ package server.server_main;
 import server.client.Client;
 import server.concurrency.Dispatcher;
 import server.concurrency.Worker;
-import server.controller.ServerController;
 import server.server_file.ServerFile;
 import server.request.Request;
 
@@ -11,6 +10,8 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import static server.controller.ControlCmds.*;
 
 /**
  * Main server app
@@ -33,12 +34,11 @@ public class Server {
     /* server_file ids as keys */
     private HashMap<String, ServerFile> fileList;
     /* Logged in  Clients */
-    private Set<Client> activeList;
+    private HashMap<String, Client> activeList;
     /* Registered clients */
     private Set<Client> registered;
 
     private ServerSocket server = null;
-    private Thread controller = null;
     private Thread[] dispatchers = null;
     private Thread[] workers = null;
     private String filePath;
@@ -50,7 +50,7 @@ public class Server {
             this.filePath = filePath;
 
             server = new ServerSocket(port);
-            activeList = new HashSet<>();
+            activeList = new HashMap<>();
             registered = new HashSet<>();
             fileList = new HashMap<>();
         } catch (IOException e) {
@@ -62,17 +62,83 @@ public class Server {
     /**
      * Initialize server
      */
-    public void init() {
+    void init() {
         loadRegistered(filePath);
         createThreadpool(howManyThreads);
+        controller();
         joinThreads();
+    }
+
+    private void controller () {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        boolean stopped = false;
+
+        String command = null;
+
+        while (!stopped) {
+            try {
+                if (reader.ready()) {
+                    command = reader.readLine();
+                }
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+
+            if (command != null) {
+                switch (command.toUpperCase()) {
+
+                    case ECHO:
+                        System.out.println("echoo");
+                        break;
+
+                    case STATUS:
+                        System.out.println("--------------- Server Status -----------------");
+                        System.out.println("---- " + registered.size() + " registered client");
+                        System.out.println("---- " + activeList.size() + " Active clients");
+                        System.out.println("---- " + fileList.size() + " Files on server");
+                        break;
+
+                    case FORCEEXIT:
+                        activeList.clear();
+                        preterminationCleanup();
+                        stopped = true;
+                        break;
+
+                    case EXIT:
+                        /*
+                        Server will exit it self after
+                        this method is invoked.
+                        */
+                        if (activeList.size() == 0) {
+                            stopped = true;
+                            preterminationCleanup();
+                        }
+                        else System.out.println("active clients still exist. Use 'forceexit'");
+                        break;
+
+                    default:
+                        System.out.println("unsupported command");
+                        break;
+
+                }
+                command = null;
+            }
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                System.out.println("Controller Interrupted");
+                preterminationCleanup();
+                break;
+            }
+        }
     }
 
     /**
      * Terminate Server
      * waits until all threads has finished.
      */
-    public void preterminationCleanup() {
+    private void preterminationCleanup() {
         try {
             /* Terminate threads */
             for (Thread worker : workers) {
@@ -92,9 +158,6 @@ public class Server {
                 dispatcher.interrupt();
                 dispatcher.join();
             }
-
-            /* stop controller */
-            controller.interrupt();
 
         } catch (InterruptedException ex) {
             //
@@ -186,11 +249,6 @@ public class Server {
      */
     private void createThreadpool(int howmany) {
 
-        /* Controller thread */
-        controller =
-            new ServerController("Controller", this, registered, activeList, fileList);
-        controller.start();
-
         workers = new Thread[howmany];
         for (int i = 0; i < howmany; i++) {
             workers[i] = new Worker("Worker Thread #" + i, serviceBuffer,
@@ -235,13 +293,11 @@ public class Server {
      * negative number to decrement.
      *
      * @param offset -
-     * @return -1 on fail or 0 on success
      */
-    public synchronized static int clientThreadCounter(int offset) {
+    public synchronized static void clientThreadCounter(int offset) {
         int check = Math.abs(offset);
-        if (check > 1) return -1;
+        if (check > 1) return;
         clientThreadCounter += offset;
-        return 0;
     }
 
     /**

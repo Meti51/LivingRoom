@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
 
 /**
  * read user input, format and send to server
@@ -33,7 +32,7 @@ public class Writer extends Thread {
     @Override
     public void run() {
 //        System.out.println(name + " Started");
-        Scanner keyboard = new Scanner(System.in);
+        BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
         PrintWriter outStream;
 
         try {
@@ -46,23 +45,33 @@ public class Writer extends Thread {
 
         /* block for user input every loop */
         while (!Thread.interrupted()) {
-            String message = keyboard.nextLine();
+            String message = null;
 
-            outStream.println(constTransmission(message));
-
-            /*
-             * Don't stress the CPU
-             * writer sleep more than reader.
-             *
-             * This is needed for client termination coordination.
-             * Other wise this thread will not get the interrupt signal
-             * since it blocks and wait for I/O
-             */
             try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
+                if (keyboard.ready()) {
+                    message = keyboard.readLine();
+                }
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+
+            if (message != null) {
+                outStream.println(constTransmission(message));
+
+                /*
+                 * Don't stress the CPU
+                 * writer sleep more than reader.
+                 *
+                 * This is needed for client termination coordination.
+                 * Other wise this thread will not get the interrupt signal
+                 * since it blocks and wait for I/O
+                 */
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
 //                System.out.println(e.getMessage());
-                break;
+                    break;
+                }
             }
         }
 
@@ -142,7 +151,6 @@ public class Writer extends Thread {
 
     private boolean fileExists(String fileName) {
         File file = new File(fileName);
-        BufferedReader check = null;
 
         try {
             new BufferedReader(new InputStreamReader(new FileInputStream(file)));

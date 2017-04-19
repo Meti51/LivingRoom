@@ -25,7 +25,7 @@ import java.net.Socket;
 public class Worker extends Thread {
 
     private Queue serviceBuffer;
-    private Set<Client> activeList;
+    private HashMap<String, Client> activeList;
     private Set<Client> registered;
     private HashMap<String, ServerFile> fileList;
 
@@ -37,7 +37,7 @@ public class Worker extends Thread {
      * @param registered list of registered clients
      * @param fileList list of files
      */
-    public Worker (String name, Queue buffer, Set<Client> activeList,
+    public Worker (String name, Queue buffer, HashMap<String, Client> activeList,
         Set<Client> registered, HashMap<String, ServerFile> fileList) {
         super(name);
         this.serviceBuffer = buffer;
@@ -172,13 +172,22 @@ public class Worker extends Thread {
 
             if (client != null) {
                 if (client.getPassword().equals(password)) {
-                    if (!activeList.contains(client)) {
+                    Client c = activeList.get(client.getUserName());
+                    if (c == null) {
                         /* add client to active list */
                         client.setConnection(socket);
-                        activeList.add(client);
+                        activeList.put(client.getUserName(), client);
                         /* Sent response */
                         out.println(ErrorMessages.SUCCESS);
                     } else {
+                        if (c.getConnection().isClosed()) {
+                            /* add client to active list */
+                            client.setConnection(socket);
+                            activeList.put(client.getUserName(), client);
+                            /* Sent response */
+                            out.println(ErrorMessages.SUCCESS);
+                            return;
+                        }
                         /* already logged in */
                         out.println(ErrorMessages.ACCESSDENIED);
                         socket.close();
@@ -207,8 +216,8 @@ public class Worker extends Thread {
         // broad cast message to all online clients
         PrintWriter broadCast;
 
-        for (Client client: activeList) {
-            broadCast = new PrintWriter(client.getConnection().getOutputStream(),
+        for (Map.Entry<String, Client> e: activeList.entrySet()) {
+            broadCast = new PrintWriter(e.getValue().getConnection().getOutputStream(),
                 true);
             broadCast.println(message.getPayload());
         }
@@ -303,14 +312,10 @@ public class Worker extends Thread {
     private synchronized void disconnect(Socket client) throws IOException {
         // disconnect a client aka remove from active list\
         client.close();
-        Iterator<Client> it = activeList.iterator();
 
-        // remove disconnected clients from active list
-        while (it.hasNext()) {
-            Client c = it.next();
-
-            if (c.getConnection().isClosed()) {
-                it.remove();
+        for (Map.Entry<String, Client> entry: activeList.entrySet()) {
+            if (entry.getValue().getConnection().isClosed()) {
+                activeList.remove(entry.getKey());
             }
         }
     }
