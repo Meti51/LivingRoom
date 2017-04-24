@@ -25,9 +25,9 @@ import java.net.Socket;
 public class Worker extends Thread {
 
     private Queue serviceBuffer;
-    private HashMap<String, Client> activeList;
+    private Map<String, Client> activeList;
     private Set<Client> registered;
-    private HashMap<String, ServerFile> fileList;
+    private Map<String, ServerFile> fileList;
 
     /**
      *
@@ -37,8 +37,8 @@ public class Worker extends Thread {
      * @param registered list of registered clients
      * @param fileList list of files
      */
-    public Worker (String name, Queue buffer, HashMap<String, Client> activeList,
-        Set<Client> registered, HashMap<String, ServerFile> fileList) {
+    public Worker (String name, Queue buffer, Map<String, Client> activeList,
+        Set<Client> registered, Map<String, ServerFile> fileList) {
         super(name);
         this.serviceBuffer = buffer;
         this.activeList = activeList;
@@ -106,6 +106,8 @@ public class Worker extends Thread {
             } catch (IOException e) {
                 System.out.println("Service was not successful: " + request);
                 System.out.println(getName() + " " + e.getMessage());
+            } catch (Exception top) {
+                System.out.println(top.getMessage());
             }
 
             // Don't stress the CPU
@@ -233,7 +235,7 @@ public class Worker extends Thread {
         PrintWriter sendList = new PrintWriter(client.getOutputStream(),
             true);
 
-        sendList.println(activeList);
+        sendList.println(activeList.keySet());
         sendList.println(ErrorMessages.SUCCESS);
     }
 
@@ -271,6 +273,12 @@ public class Worker extends Thread {
             if (split[1].trim().equals("%")) {
                 split[1] = String.valueOf(client.getInetAddress());
                 split[1] = split[1].replace("/", "");
+                if (split[1].equals("127.0.0.1")) {
+                    sendList.println(ErrorMessages.INVALIDFORMAT);
+                    return;
+                }
+
+                /* add files to client object */
             }
 
             ServerFile file = new ServerFile(split[0].trim(), split[1].trim(), split[2].trim());

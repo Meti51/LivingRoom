@@ -9,6 +9,7 @@ import server.request.Request;
 import java.io.*;
 import java.net.ServerSocket;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static server.controller.ControlCmds.*;
@@ -32,9 +33,9 @@ public class Server {
     private Queue<Request> serviceBuffer = new ConcurrentLinkedQueue<>();
     /* list of server_file ids and details */
     /* server_file ids as keys */
-    private HashMap<String, ServerFile> fileList;
+    private Map<String, ServerFile> fileList;
     /* Logged in  Clients */
-    private HashMap<String, Client> activeList;
+    private Map<String, Client> activeList;
     /* Registered clients */
     private Set<Client> registered;
 
@@ -50,9 +51,9 @@ public class Server {
             this.filePath = filePath;
 
             server = new ServerSocket(port);
-            activeList = new HashMap<>();
+            activeList = new ConcurrentHashMap<>();
             registered = new HashSet<>();
-            fileList = new HashMap<>();
+            fileList = new ConcurrentHashMap<>();
         } catch (IOException e) {
             System.out.println("Could not listen on port " + port);
             e.printStackTrace();

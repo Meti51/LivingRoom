@@ -31,6 +31,9 @@ How to start Server
     Note: Please start server first before starting client. client app will return server refused connection if it
           cannot find active server.
 
+          When client starts, the current working directory is the current working directory from which it was started
+          from.
+
 How to start Client
 --------------------
 
@@ -100,12 +103,22 @@ Code File Structure and detail
 
         enums
             ErrorMessages.java: holds possible error codes for server and client side apps.
+
             Functions.java: Functionality supported by server.
+
             Limits.java: Resource control settings.
+
             ServerStatus.java: For server user only. A way to keep track of state of server
                                after each request.
 
         server
+            Listens for user input from server side and if commands are supported, implements them else throws
+            unsupported command error message.
+            Commands available:
+                echo: prints echoo - indicating server is responsive
+                status: prints status of server
+                exit: terminate server
+
             client
                 Client.java: Represents a client in server. Holds info about client.
 
@@ -120,13 +133,6 @@ Code File Structure and detail
 
             controller
                 ControlCmds.java: server control commands.
-                ServerController.java: Listens for user input from server side and if commands are
-                                       supported, implements them else throws unsupported command error
-                                       message.
-                                       commands available:
-                                            echo: prints echoo - indicating server is responsive
-                                            status: prints status of server
-                                            exit: terminate server
 
             files
                 registered.txt: This file holds previously registered clients for when server
