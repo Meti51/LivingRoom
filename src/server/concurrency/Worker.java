@@ -273,12 +273,6 @@ public class Worker extends Thread {
             if (split[1].trim().equals("%")) {
                 split[1] = String.valueOf(client.getInetAddress());
                 split[1] = split[1].replace("/", "");
-                if (split[1].equals("127.0.0.1")) {
-                    sendList.println(ErrorMessages.INVALIDFORMAT);
-                    return;
-                }
-
-                /* add files to client object */
             }
 
             ServerFile file = new ServerFile(split[0].trim(), split[1].trim(), split[2].trim());

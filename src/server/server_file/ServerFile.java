@@ -36,8 +36,8 @@ public class ServerFile {
   }
 
   public String toString() {
-    return id + " | " + client_ip_addr + " | " +
-        client_port + " | " + filename;
+    return id + "," + client_ip_addr + "," +
+        client_port + "," + filename;
   }
 
   @Override

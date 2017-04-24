@@ -64,8 +64,8 @@ public class Dispatcher extends Thread {
             Create new thread to handle
             persistent connection.
              */
-            Socket finalClient = client;
-            BufferedReader finalIn = in;
+            final Socket finalClient = client;
+            final BufferedReader finalIn = in;
             if (Server.getClientThreadCounter() < CLIENTLIMIT) {
                 if (finalIn != null) {
                     new Thread() {

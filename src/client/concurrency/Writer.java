@@ -67,7 +67,7 @@ public class Writer extends Thread {
                  * since it blocks and wait for I/O
                  */
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
 //                System.out.println(e.getMessage());
                     break;

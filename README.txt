@@ -21,10 +21,10 @@ How to start Server
 
     For Linux Users
     ----------------
-    1. Locate src directory and execute this command on command line: javac server/StartServer.java
-       This will compile the source code to executable
+    1. Locate src directory and execute this command on command line: javac server/server_main/StartServer.java
+       This will compile the source code to executable. You need only compile once.
 
-    2. Then run server using command: java server/StartServer ./filepath
+    2. Then run server using command: java server/server_main/StartServer ./filepath
        i.e. file path of the registered clients list.
             [This file has to match the format of Programming Assignment specifications].
 
@@ -33,6 +33,9 @@ How to start Server
 
           When client starts, the current working directory is the current working directory from which it was started
           from.
+
+		  If it compiles correctly but returning class not found error on start up, please delete all .class file and 
+		  compile again.
 
 How to start Client
 --------------------
@@ -43,10 +46,13 @@ How to start Client
 
     For Linux Users
     ----------------
-    1. Locate src directory and execute this command on command line: javac client/StartClient.java
-       This will compile the source code to executable
+    1. Locate src directory and execute this command on command line: javac client/client_main/StartClient.java
+       This will compile the source code to executable. You need only compile once.
 
-    2. Then run client app using command: java client/StartClient
+    2. Then run client app using command: java client/client_main/StartClient
+
+	Note: If it compiles correctly but returning class not found error on start up, delete all .class file and 
+		  compile again.
 
 Customization
 -------------
@@ -96,10 +102,11 @@ Code File Structure and detail
                              action [starts FileReceiver thread if its a file request].
                 Writer.java: This thread waits for user input and sends formatted input to server.
 
-            ClientSide.java: Client side app top level code. starts connection, starts the threads
-                             [starts Writer, Reader, FileSender, and FileReceiver threads].
+	    	client_main	
+		        ClientSide.java: Client side app top level code. starts connection, starts the threads
+		                         [starts Writer, Reader, FileSender, and FileReceiver threads].
 
-            StartClient.java: java main method to start ClientSide.
+		        StartClient.java: java main method to start ClientSide.
 
         enums
             ErrorMessages.java: holds possible error codes for server and client side apps.
@@ -143,10 +150,11 @@ Code File Structure and detail
                               and connection socket of client. [Request is created by dispatcher
                               and placed on request buffer]
 
-            Server.java: Top level server app. This class start server connections, loads registered
-                         clients, starts the threads and wait for incoming connections.
+			server_main
+		        Server.java: Top level server app. This class start server connections, loads registered
+		                     clients, starts the threads and wait for incoming connections.
 
-            StartServer.java: java main method to start top level server.
+		        StartServer.java: java main method to start top level server.
 
 Supported Server Function
 -------------------------
