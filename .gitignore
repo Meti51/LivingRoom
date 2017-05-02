@@ -4,3 +4,4 @@ out/production/MultiThreadedServerAndChatRoom/client/Client.class
 *.class
 .idea/workspace.xml___jb_tmp___
 out
+.idea/workspace.xml

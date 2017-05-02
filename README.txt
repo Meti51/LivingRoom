@@ -1,4 +1,4 @@
-LivingRoom
+﻿LivingRoom
 ----------
 
 Living room is Server and client combo personal chatroom. Users can start their own server that
@@ -206,4 +206,8 @@ Supported Server Function
 
 !!! for more information please look at the java classes in question.
 
+Bug report
+----------
+
+Please send details of bug, if possible recreation steps, to natnaelger@gmail.com.
 
